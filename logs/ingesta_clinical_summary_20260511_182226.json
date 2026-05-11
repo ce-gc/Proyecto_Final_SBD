@@ -1,0 +1,27 @@
+{
+  "job": "01_ingesta_clinical",
+  "timestamp_utc": "2026-05-11T18:22:05.069923+00:00",
+  "status": "SUCCESS",
+  "csv_path": "/datalake/raw/clinical/breast-cancer.csv",
+  "parquet_path": "/datalake/raw/clinical/breast-cancer.parquet",
+  "corrupt_rows": 0,
+  "schema_validation": {
+    "missing_cols": [],
+    "extra_cols": [],
+    "type_errors": [],
+    "type_fixes": []
+  },
+  "duplicates_removed": 0,
+  "data_quality": {
+    "total_rows": 569,
+    "null_counts": {},
+    "diagnosis_values": [
+      "B",
+      "M"
+    ],
+    "null_pct_total": 0.0
+  },
+  "parquet_written": true,
+  "records_ingested": 569,
+  "errors": 0
+}

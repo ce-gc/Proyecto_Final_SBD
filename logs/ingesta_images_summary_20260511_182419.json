@@ -1,0 +1,45 @@
+{
+  "job": "03_ingesta_images",
+  "timestamp_utc": "2026-05-11T18:23:21.246724+00:00",
+  "status": "SUCCESS",
+  "input_dir": "/datalake/raw/images",
+  "output_path": "/datalake/raw/images_meta",
+  "dimension_stats": {
+    "width_min": 190,
+    "width_max": 1048,
+    "width_mean": 616.1,
+    "height_min": 310,
+    "height_max": 719,
+    "height_mean": 501.6,
+    "unique_sizes": 639,
+    "modes": [
+      "1",
+      "RGB",
+      "RGBA"
+    ],
+    "formats": [
+      "PNG"
+    ],
+    "channels": [
+      1,
+      3,
+      4
+    ]
+  },
+  "duplicate_images": 3,
+  "images_processed": 1578,
+  "corrupt_files": 0,
+  "empty_files": 0,
+  "skipped_extensions": 0,
+  "category_counts": {
+    "benign": 891,
+    "malignant": 421,
+    "normal": 266
+  },
+  "discovered_categories": [
+    "benign",
+    "malignant",
+    "normal"
+  ],
+  "errors": 0
+}

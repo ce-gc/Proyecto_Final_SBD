@@ -1,0 +1,30 @@
+2026-05-11 18:22:38 | INFO     | ============================================================
+2026-05-11 18:22:38 | INFO     | INICIO - Ingesta del dataset genómico (Parquet)
+2026-05-11 18:22:38 | INFO     | ============================================================
+2026-05-11 18:22:38 | INFO     | DATALAKE_ROOT: /datalake
+2026-05-11 18:22:38 | INFO     | Parquet de entrada: /datalake/raw/genomics/breast_cancer_expression_ssa_synthetic.parquet (107554038 bytes)
+2026-05-11 18:22:43 | INFO     | SparkSession creada correctamente.
+2026-05-11 18:22:45 | INFO     | Parquet leído correctamente: /datalake/raw/genomics/breast_cancer_expression_ssa_synthetic.parquet
+2026-05-11 18:22:45 | INFO     | Schema del Parquet:
+2026-05-11 18:22:45 | INFO     | Schema evolution: 120 columnas adicionales detectadas (se conservan).
+2026-05-11 18:22:45 | DEBUG    | Columnas extra (muestra): ['AGR2_expr', 'AKT1_expr', 'AKT2_expr', 'AKT3_expr', 'AR_expr', 'ATM_expr', 'AURKA_expr', 'BARD1_expr', 'BCL2_expr', 'BIRC5_expr', 'BMI', 'BRAF_expr', 'BRCA1_expr', 'BRCA1_germline', 'BRCA2_expr', 'BRCA2_germline', 'CBFB_expr', 'CCNB1_expr', 'CCND1_expr', 'CCNE1_expr']
+2026-05-11 18:22:45 | INFO     | Validación de columnas críticas: 10/10 presentes, 0 rellenadas, 120 extra.
+2026-05-11 18:22:46 | INFO     | Columna 'age_at_diagnosis': todos los valores en rango [0, 120].
+2026-05-11 18:22:47 | WARNING  | Columna 'survival_months': 44471 valores fuera del rango [0, 600].
+2026-05-11 18:22:47 | WARNING  | Columna 'recurrence_free_months': 43570 valores fuera del rango [0, 600].
+2026-05-11 18:22:53 | INFO     | No se encontraron duplicados.
+2026-05-11 18:22:55 | INFO     | Datos cargados: 100000 filas, 130 columnas.
+2026-05-11 18:22:58 | WARNING  | Columna crítica 'age_at_diagnosis' tiene 497 valores nulos (0.5%).
+2026-05-11 18:23:00 | WARNING  | Columna crítica 'molecular_subtype' tiene 974 valores nulos (1.0%).
+2026-05-11 18:23:01 | WARNING  | Columna crítica 'survival_months' tiene 10252 valores nulos (10.3%).
+2026-05-11 18:23:03 | WARNING  | Columna crítica 'vital_status' tiene 4901 valores nulos (4.9%).
+2026-05-11 18:23:04 | WARNING  | Columna crítica 'recurrence_free_months' tiene 12159 valores nulos (12.2%).
+2026-05-11 18:23:06 | WARNING  | Columna crítica 'recurrence_event' tiene 7939 valores nulos (7.9%).
+2026-05-11 18:23:08 | WARNING  | Columna crítica 'distant_metastasis' tiene 11770 valores nulos (11.8%).
+2026-05-11 18:23:08 | INFO     | Schema snapshot guardado en '/datalake/raw/genomics/_schema_snapshot.json'.
+2026-05-11 18:23:08 | INFO     | ============================================================
+2026-05-11 18:23:08 | INFO     | FIN - Ingesta de genómicos completada.
+2026-05-11 18:23:08 | INFO     |   Registros: 100000 | Columnas: 130 | Duplicados: 0 | Errores: 0
+2026-05-11 18:23:08 | INFO     | ============================================================
+2026-05-11 18:23:08 | INFO     | Resumen de ejecución guardado en '/work/logs/ingesta_genomics_summary_20260511_182308.json'.
+2026-05-11 18:23:08 | INFO     | SparkSession cerrada.

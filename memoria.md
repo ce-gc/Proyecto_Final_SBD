@@ -43,13 +43,42 @@ Se ha iniciado la fase de ingesta para mover los datos desde las fuentes origina
 - **Protección contra handlers duplicados**: Se evita la acumulación de handlers de logging si el job se ejecuta varias veces en la misma sesión de Python.
 - **Detección de imágenes corruptas**: El job de imágenes usa `img.verify()` para detectar archivos dañados antes de extraer metadatos.
 
+**Mejoras de robustez (schema evolution y variaciones de datos):**
+
+Los tres jobs fueron refactorizados para soportar cualquier variación en los datos de entrada sin abortar la ingesta:
+
+- **CSV clínico (`01_ingesta_clinical.py`)**:
+  - Lectura en modo `PERMISSIVE` con captura de filas corruptas en `_corrupt_record`.
+  - Columnas faltantes se rellenan con `null` (no se aborta la ingesta).
+  - Columnas extra se conservan (schema evolution).
+  - Cast automático de tipos string→DoubleType en columnas numéricas.
+  - Deduplicación por columna `id`.
+  - Detección de ficheros vacíos (0 bytes) antes de la lectura.
+  - Soporte para CSV multiline, encoding UTF-8 y escape de comillas.
+- **Parquet genómico (`02_ingesta_genomics.py`)**:
+  - Lectura segura con fallback: si el Parquet principal falla, intenta lectura de fragmentos válidos con `unionByName(allowMissingColumns=True)`.
+  - Configuración `ignoreCorruptFiles=true` y `mergeSchema=true`.
+  - Columnas críticas ausentes se rellenan con `null` (no se aborta).
+  - Validación de rangos numéricos (`age_at_diagnosis`, `survival_months`, `recurrence_free_months`).
+  - Deduplicación por todas las columnas.
+  - Schema snapshot guardado como JSON para trazabilidad de evolución entre ejecuciones.
+- **Imágenes de ecografía (`03_ingesta_images.py`)**:
+  - Categorías dinámicas: cualquier subdirectorio se acepta como categoría válida (no se restringen a un set fijo).
+  - Formatos ampliados: PNG, JPG, JPEG, BMP, TIFF, WEBP, GIF.
+  - `Image.MAX_IMAGE_PIXELS = None` para soportar imágenes médicas de alta resolución.
+  - Verificación en dos fases: `img.verify()` + fallback a lectura directa (WEBP/TIFF no soportan verify).
+  - Detección de ficheros vacíos (0 bytes).
+  - Estadísticas de dimensiones (min/max/media por width y height, tamaños únicos).
+  - Detección de duplicados por hash MD5 del contenido.
+  - 10 campos de metadatos (vs. 7 anteriores): + `channels`, `format`, `file_hash`.
+
 **Resultados de la ejecución (validados en contenedor Docker):**
 
 | Job | Registros | Columnas | Errores | Resultado |
 |-----|-----------|----------|---------|-----------|
-| `01_ingesta_clinical.py` | 569 filas | 32 (id + diagnosis + 30 numéricas) | 0 | Parquet generado en `raw/clinical/` |
-| `02_ingesta_genomics.py` | 100,000 filas | 130 | 0 (7 columnas con nulls detectados) | Fichero original preservado |
-| `03_ingesta_images.py` | 1,578 imágenes | 7 metadatos por imagen | 0 corruptas | Parquet generado en `raw/images_meta/` |
+| `01_ingesta_clinical.py` | 569 filas | 32 (id + diagnosis + 30 numéricas) | 0 corruptos, 0 duplicados | Parquet generado en `raw/clinical/` |
+| `02_ingesta_genomics.py` | 100,000 filas | 130 (10 críticas + 120 extra) | 0 duplicados, 7 columnas con nulls | Fichero original preservado + schema snapshot |
+| `03_ingesta_images.py` | 1,578 imágenes | 10 metadatos por imagen | 0 corruptas, 3 duplicados (hash) | Parquet generado en `raw/images_meta/` |
 
 **Detalle de nulls detectados en dataset genómico (informativo, no bloqueante):**
 - `age_at_diagnosis`: 497 nulls (0.5%)
@@ -60,10 +89,23 @@ Se ha iniciado la fase de ingesta para mover los datos desde las fuentes origina
 - `recurrence_event`: 7,939 nulls (7.9%)
 - `distant_metastasis`: 11,770 nulls (11.8%)
 
+**Validación de rangos en dataset genómico:**
+- `age_at_diagnosis`: todos los valores en rango [0, 120] ✓
+- `survival_months`: 44,471 valores fuera de rango [0, 600] (datos sintéticos)
+- `recurrence_free_months`: 43,570 valores fuera de rango [0, 600] (datos sintéticos)
+
 **Distribución de imágenes por categoría:**
 - Benign: 891 imágenes
 - Malignant: 421 imágenes
 - Normal: 266 imágenes
+
+**Estadísticas de dimensiones de imágenes:**
+- Width: min=190, max=1048, media=616.1
+- Height: min=310, max=719, media=501.6
+- Tamaños únicos: 639
+- Modos de color: `1` (binario), `RGB`, `RGBA`
+- Canales: 1, 3, 4
+- Duplicados detectados por hash MD5: 3
 
 ---
 *(Este archivo se continuará actualizando con las siguientes fases del proyecto.)*
