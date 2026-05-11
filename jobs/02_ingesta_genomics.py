@@ -1,15 +1,6 @@
 """
 02_ingesta_genomics.py
 ======================
-Job de ingesta para el dataset genomico (Parquet).
-
-Estrategia:
-  - Lectura directa con PySpark (spark.read.parquet).
-  - Validacion de schema contra columnas criticas de referencia.
-  - Schema evolution: columnas adicionales se aceptan (mergeSchema).
-  - Columnas criticas faltantes: excepcion controlada.
-  - El fichero original se mantiene sin modificar en Raw.
-  - Idempotente y con log estructurado.
 
 Uso (dentro del contenedor):
   spark-submit jobs/02_ingesta_genomics.py

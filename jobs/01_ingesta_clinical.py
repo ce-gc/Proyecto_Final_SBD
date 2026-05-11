@@ -1,15 +1,6 @@
 """
 01_ingesta_clinical.py
 ======================
-Job de ingesta para el dataset clinico (CSV).
-
-Estrategia:
-  - Lectura con PySpark (header + inferSchema).
-  - Validacion de schema: 30 columnas numericas esperadas.
-  - Columnas nuevas: se registran en log y se ignoran.
-  - Columnas faltantes: excepcion controlada.
-  - Persistencia: snapshot Parquet en Raw (idempotente).
-  - Log estructurado con resumen JSON.
 
 Uso (dentro del contenedor):
   spark-submit jobs/01_ingesta_clinical.py

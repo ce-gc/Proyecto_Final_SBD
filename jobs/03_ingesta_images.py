@@ -1,16 +1,6 @@
 """
 03_ingesta_images.py
 ====================
-Job de ingesta para el dataset de imagenes (no estructurado).
-
-Estrategia:
-  - Recorrido del arbol de directorios con os.walk para localizar PNG/JPG.
-  - Extraccion de metadatos por imagen: nombre, ruta, clase, ancho, alto, modo, bytes.
-  - Creacion de DataFrame PySpark y persistencia en raw/images_meta/ como Parquet.
-  - Las imagenes originales se mantienen en Raw sin modificar.
-  - Deteccion y logging de imagenes corruptas/extensiones no reconocidas.
-  - Idempotente: verifica existencia antes de escribir.
-  - Try/except por fichero: un error no aborta la ingesta completa.
 
 Uso (dentro del contenedor):
   python jobs/03_ingesta_images.py
