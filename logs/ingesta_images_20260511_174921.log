@@ -1,0 +1,16 @@
+2026-05-11 17:49:21 | INFO     | ============================================================
+2026-05-11 17:49:21 | INFO     | INICIO - Ingesta de metadatos de imagenes
+2026-05-11 17:49:21 | INFO     | ============================================================
+2026-05-11 17:49:21 | INFO     | DATALAKE_ROOT: /datalake
+2026-05-11 17:50:15 | INFO     | Procesadas 1578 imagenes. Corruptas: 0. Extensiones ignoradas: 0.
+2026-05-11 17:50:15 | INFO     |   Categoria 'benign': 891 imagenes
+2026-05-11 17:50:15 | INFO     |   Categoria 'malignant': 421 imagenes
+2026-05-11 17:50:15 | INFO     |   Categoria 'normal': 266 imagenes
+2026-05-11 17:50:21 | INFO     | Escribiendo metadatos Parquet en '/datalake/raw/images_meta'...
+2026-05-11 17:50:26 | INFO     | Metadatos Parquet escritos correctamente.
+2026-05-11 17:50:26 | INFO     | ============================================================
+2026-05-11 17:50:26 | INFO     | FIN - Ingesta de metadatos completada.
+2026-05-11 17:50:26 | INFO     |   Imagenes: 1578 | Corruptas: 0 | Extensiones ignoradas: 0
+2026-05-11 17:50:26 | INFO     | ============================================================
+2026-05-11 17:50:26 | INFO     | Resumen de ejecucion guardado en '/work/logs/ingesta_images_summary_20260511_175026.json'.
+2026-05-11 17:50:26 | INFO     | SparkSession cerrada.

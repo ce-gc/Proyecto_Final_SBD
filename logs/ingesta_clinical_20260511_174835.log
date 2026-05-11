@@ -1,0 +1,22 @@
+2026-05-11 17:48:35 | INFO     | ============================================================
+2026-05-11 17:48:35 | INFO     | INICIO - Ingesta del dataset clinico (CSV)
+2026-05-11 17:48:35 | INFO     | ============================================================
+2026-05-11 17:48:35 | INFO     | DATALAKE_ROOT: /datalake
+2026-05-11 17:48:35 | INFO     | CSV de entrada: /datalake/raw/clinical/breast-cancer.csv
+2026-05-11 17:48:42 | INFO     | SparkSession creada correctamente.
+2026-05-11 17:48:42 | INFO     | Leyendo CSV con inferSchema...
+2026-05-11 17:48:44 | INFO     | Schema inferido:
+2026-05-11 17:48:44 | INFO     | Todas las columnas esperadas estan presentes (32 columnas).
+2026-05-11 17:48:44 | INFO     | Todos los tipos de las columnas numericas son correctos.
+2026-05-11 17:48:45 | INFO     | Total de registros leidos: 569
+2026-05-11 17:48:50 | INFO     | No se encontraron valores nulos en las columnas esperadas.
+2026-05-11 17:48:50 | INFO     | Valores unicos de 'diagnosis': ['B', 'M']
+2026-05-11 17:48:50 | INFO     | DataFrame reducido a 32 columnas esperadas.
+2026-05-11 17:48:50 | INFO     | Escribiendo snapshot Parquet en '/datalake/raw/clinical/breast-cancer.parquet'...
+2026-05-11 17:48:52 | INFO     | Snapshot Parquet escrito correctamente.
+2026-05-11 17:48:52 | INFO     | ============================================================
+2026-05-11 17:48:52 | INFO     | FIN - Ingesta completada con exito.
+2026-05-11 17:48:52 | INFO     |   Registros: 569 | Errores: 0 | Parquet escrito: True
+2026-05-11 17:48:52 | INFO     | ============================================================
+2026-05-11 17:48:52 | INFO     | Resumen de ejecucion guardado en '/work/logs/ingesta_clinical_summary_20260511_174852.json'.
+2026-05-11 17:48:52 | INFO     | SparkSession cerrada.

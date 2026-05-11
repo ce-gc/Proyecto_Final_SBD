@@ -1,0 +1,25 @@
+{
+  "job": "02_ingesta_genomics",
+  "timestamp_utc": "2026-05-11T17:49:02.038053+00:00",
+  "status": "SUCCESS",
+  "input_path": "/datalake/raw/genomics/breast_cancer_expression_ssa_synthetic.parquet",
+  "schema_validation": {
+    "missing_critical": [],
+    "extra_cols_count": 120
+  },
+  "data_quality": {
+    "total_rows": 100000,
+    "total_cols": 130,
+    "null_counts": {
+      "age_at_diagnosis": 497,
+      "molecular_subtype": 974,
+      "survival_months": 10252,
+      "vital_status": 4901,
+      "recurrence_free_months": 12159,
+      "recurrence_event": 7939,
+      "distant_metastasis": 11770
+    }
+  },
+  "records_ingested": 100000,
+  "errors": 0
+}

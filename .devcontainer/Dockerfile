@@ -15,6 +15,7 @@ RUN pip install --no-cache-dir \
       numpy \
       requests \
       pandas \
-      pyarrow
+      pyarrow \
+      Pillow
 
 WORKDIR /work

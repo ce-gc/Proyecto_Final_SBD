@@ -1,0 +1,25 @@
+2026-05-11 17:49:02 | INFO     | ============================================================
+2026-05-11 17:49:02 | INFO     | INICIO - Ingesta del dataset genomico (Parquet)
+2026-05-11 17:49:02 | INFO     | ============================================================
+2026-05-11 17:49:02 | INFO     | DATALAKE_ROOT: /datalake
+2026-05-11 17:49:02 | INFO     | Parquet de entrada: /datalake/raw/genomics/breast_cancer_expression_ssa_synthetic.parquet
+2026-05-11 17:49:06 | INFO     | SparkSession creada correctamente.
+2026-05-11 17:49:06 | INFO     | Leyendo Parquet...
+2026-05-11 17:49:08 | INFO     | Schema del Parquet:
+2026-05-11 17:49:08 | INFO     | Columnas adicionales encontradas (schema evolution aceptada): 120 columnas extra.
+2026-05-11 17:49:08 | DEBUG    | Columnas extra: ['AGR2_expr', 'AKT1_expr', 'AKT2_expr', 'AKT3_expr', 'AR_expr', 'ATM_expr', 'AURKA_expr', 'BARD1_expr', 'BCL2_expr', 'BIRC5_expr', 'BMI', 'BRAF_expr', 'BRCA1_expr', 'BRCA1_germline', 'BRCA2_expr', 'BRCA2_germline', 'CBFB_expr', 'CCNB1_expr', 'CCND1_expr', 'CCNE1_expr']
+2026-05-11 17:49:08 | INFO     | Validacion de columnas criticas superada (10/10 presentes).
+2026-05-11 17:49:10 | INFO     | Datos cargados: 100000 filas, 130 columnas.
+2026-05-11 17:49:11 | WARNING  | Columna critica 'age_at_diagnosis' tiene 497 valores nulos (0.5%).
+2026-05-11 17:49:11 | WARNING  | Columna critica 'molecular_subtype' tiene 974 valores nulos (1.0%).
+2026-05-11 17:49:12 | WARNING  | Columna critica 'survival_months' tiene 10252 valores nulos (10.3%).
+2026-05-11 17:49:12 | WARNING  | Columna critica 'vital_status' tiene 4901 valores nulos (4.9%).
+2026-05-11 17:49:12 | WARNING  | Columna critica 'recurrence_free_months' tiene 12159 valores nulos (12.2%).
+2026-05-11 17:49:12 | WARNING  | Columna critica 'recurrence_event' tiene 7939 valores nulos (7.9%).
+2026-05-11 17:49:12 | WARNING  | Columna critica 'distant_metastasis' tiene 11770 valores nulos (11.8%).
+2026-05-11 17:49:12 | INFO     | ============================================================
+2026-05-11 17:49:12 | INFO     | FIN - Ingesta de genomicos completada.
+2026-05-11 17:49:12 | INFO     |   Registros: 100000 | Columnas: 130 | Errores: 0
+2026-05-11 17:49:12 | INFO     | ============================================================
+2026-05-11 17:49:12 | INFO     | Resumen de ejecucion guardado en '/work/logs/ingesta_genomics_summary_20260511_174912.json'.
+2026-05-11 17:49:13 | INFO     | SparkSession cerrada.

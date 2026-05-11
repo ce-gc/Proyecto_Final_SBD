@@ -6,8 +6,10 @@ services:
       context: .
       dockerfile: .devcontainer/Dockerfile
     volumes:
-      - .:/app
+      - .:/work
       - ./datalake:/datalake
-    working_dir: /app
+    working_dir: /work
     environment:
       - PYTHONUNBUFFERED=1
+    stdin_open: true
+    tty: true
