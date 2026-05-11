@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: .devcontainer/Dockerfile
+    volumes:
+      - .:/app
+      - ./datalake:/datalake
+    working_dir: /app
+    environment:
+      - PYTHONUNBUFFERED=1
