@@ -1,0 +1,54 @@
+2026-05-12 13:54:49 | INFO     | ============================================================
+2026-05-12 13:54:49 | INFO     | INICIO - Limpieza del dataset clínico
+2026-05-12 13:54:49 | INFO     | ============================================================
+2026-05-12 13:54:49 | INFO     | DATALAKE_ROOT: /datalake
+2026-05-12 13:54:49 | INFO     | Parquet de entrada: /datalake/raw/clinical/breast-cancer.parquet
+2026-05-12 13:54:56 | INFO     | SparkSession creada correctamente.
+2026-05-12 13:55:00 | INFO     | Datos raw leídos: 569 filas × 32 columnas.
+2026-05-12 13:55:07 | INFO     | No se encontraron columnas completamente vacías.
+2026-05-12 13:55:08 | INFO     | No se encontraron duplicados (clave: 'id').
+2026-05-12 13:55:10 | INFO     | Cast a DoubleType aplicado a 30 columnas numéricas.
+2026-05-12 13:55:16 | INFO     | No se encontraron nulos en columnas numéricas.
+2026-05-12 13:55:17 | DEBUG    | Columna 'radius_mean': 15 outliers clampeados [5.6850, 21.7250].
+2026-05-12 13:55:17 | DEBUG    | Columna 'texture_mean': 8 outliers clampeados [7.9050, 29.9450].
+2026-05-12 13:55:18 | DEBUG    | Columna 'perimeter_mean': 15 outliers clampeados [32.8250, 145.7450].
+2026-05-12 13:55:18 | DEBUG    | Columna 'area_mean': 37 outliers clampeados [-91.8000, 1273.8000].
+2026-05-12 13:55:18 | DEBUG    | Columna 'smoothness_mean': 7 outliers clampeados [0.0586, 0.1327].
+2026-05-12 13:55:19 | DEBUG    | Columna 'compactness_mean': 18 outliers clampeados [-0.0323, 0.2269].
+2026-05-12 13:55:19 | DEBUG    | Columna 'concavity_mean': 21 outliers clampeados [-0.1113, 0.2644].
+2026-05-12 13:55:20 | DEBUG    | Columna 'concave points_mean': 18 outliers clampeados [-0.0548, 0.1455].
+2026-05-12 13:55:20 | DEBUG    | Columna 'symmetry_mean': 16 outliers clampeados [0.1118, 0.2454].
+2026-05-12 13:55:21 | DEBUG    | Columna 'fractal_dimension_mean': 16 outliers clampeados [0.0452, 0.0785].
+2026-05-12 13:55:21 | DEBUG    | Columna 'radius_se': 44 outliers clampeados [-0.1254, 0.8286].
+2026-05-12 13:55:22 | DEBUG    | Columna 'texture_se': 21 outliers clampeados [-0.1128, 2.4117].
+2026-05-12 13:55:22 | DEBUG    | Columna 'perimeter_se': 42 outliers clampeados [-0.9050, 5.7910].
+2026-05-12 13:55:23 | DEBUG    | Columna 'area_se': 65 outliers clampeados [-21.9900, 84.2500].
+2026-05-12 13:55:23 | DEBUG    | Columna 'smoothness_se': 30 outliers clampeados [0.0008, 0.0124].
+2026-05-12 13:55:24 | DEBUG    | Columna 'compactness_se': 30 outliers clampeados [-0.0153, 0.0605].
+2026-05-12 13:55:24 | DEBUG    | Columna 'concavity_se': 30 outliers clampeados [-0.0229, 0.0784].
+2026-05-12 13:55:24 | DEBUG    | Columna 'concave points_se': 20 outliers clampeados [-0.0028, 0.0250].
+2026-05-12 13:55:25 | DEBUG    | Columna 'symmetry_se': 29 outliers clampeados [0.0033, 0.0350].
+2026-05-12 13:55:25 | DEBUG    | Columna 'fractal_dimension_se': 30 outliers clampeados [-0.0011, 0.0078].
+2026-05-12 13:55:26 | DEBUG    | Columna 'radius_worst': 19 outliers clampeados [4.7900, 26.7100].
+2026-05-12 13:55:26 | DEBUG    | Columna 'texture_worst': 5 outliers clampeados [8.5850, 41.9050].
+2026-05-12 13:55:27 | DEBUG    | Columna 'perimeter_worst': 19 outliers clampeados [24.1250, 184.0850].
+2026-05-12 13:55:27 | DEBUG    | Columna 'area_worst': 45 outliers clampeados [-259.7500, 1807.0500].
+2026-05-12 13:55:27 | DEBUG    | Columna 'smoothness_worst': 8 outliers clampeados [0.0737, 0.1881].
+2026-05-12 13:55:28 | DEBUG    | Columna 'compactness_worst': 20 outliers clampeados [-0.1269, 0.6039].
+2026-05-12 13:55:28 | DEBUG    | Columna 'concavity_worst': 12 outliers clampeados [-0.2820, 0.7753].
+2026-05-12 13:55:29 | DEBUG    | Columna 'symmetry_worst': 23 outliers clampeados [0.1508, 0.4164].
+2026-05-12 13:55:30 | DEBUG    | Columna 'fractal_dimension_worst': 25 outliers clampeados [0.0409, 0.1223].
+2026-05-12 13:55:30 | INFO     | Outliers (IQR×1.5): 688 valores clampeados en 29 columnas.
+2026-05-12 13:55:30 | INFO     | Todos los registros tienen diagnosis válido.
+2026-05-12 13:55:30 | INFO     | Columnas de auditoría añadidas (_clean_ts, _clean_job).
+2026-05-12 13:55:30 | INFO     | Total de registros tras limpieza: 569
+2026-05-12 13:55:36 | INFO     | Distribución de diagnosis: {'B': 357, 'M': 212}
+2026-05-12 13:55:36 | INFO     | Escribiendo Parquet limpio en '/datalake/cleanse/clinical/breast-cancer.parquet'...
+2026-05-12 13:55:38 | INFO     | Parquet limpio escrito correctamente.
+2026-05-12 13:55:38 | INFO     | ============================================================
+2026-05-12 13:55:38 | INFO     | FIN - Limpieza completada con éxito.
+2026-05-12 13:55:38 | INFO     |   Filas: 569 → 569 | Duplicados: 0 | Sin diagnosis: 0 | Outliers clampeados: 688
+2026-05-12 13:55:38 | INFO     |   Resultado en: /datalake/cleanse/clinical/breast-cancer.parquet
+2026-05-12 13:55:38 | INFO     | ============================================================
+2026-05-12 13:55:38 | INFO     | Resumen de ejecución guardado en '/work/logs/limpieza_clinical_summary_20260512_135538.json'.
+2026-05-12 13:55:38 | INFO     | SparkSession cerrada.
