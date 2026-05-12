@@ -49,20 +49,29 @@ def main():
     # 1. Cargar datos de cleanse
     df = spark.read.parquet(CLEANSE_CLINICAL_PATH)
     
-    # 2. Vectorizar y Escalar
+    # 2. Convertir diagnosis a label numérico: M=1, B=0
+    df = df.withColumn("label", F.when(F.col("diagnosis") == "M", 1.0).otherwise(0.0))
+
+    # 3. Vectorizar
     assembler = VectorAssembler(inputCols=NUMERIC_COLS, outputCol="features")
     df_vector = assembler.transform(df)
     
-    scaler = StandardScaler(inputCol="features", outputCol="scaled_features")
-    scaler_model = scaler.fit(df_vector)
-    df_curated = scaler_model.transform(df_vector)
-
-    # 3. Clasificación ligera para Feature Importance (100 árboles)
-    # Convertimos diagnosis a label numérico: M=1, B=0
-    df_curated = df_curated.withColumn("label", F.when(F.col("diagnosis") == "M", 1.0).otherwise(0.0))
+    # 4. Dividir en Train y Test ANTES de escalar para evitar Data Leakage
+    train_df, test_df = df_vector.randomSplit([0.8, 0.2], seed=42)
     
+    # 5. Escalar (fit solo en train)
+    scaler = StandardScaler(inputCol="features", outputCol="scaled_features")
+    scaler_model = scaler.fit(train_df)
+    
+    train_scaled = scaler_model.transform(train_df).withColumn("dataset_split", F.lit("train"))
+    test_scaled = scaler_model.transform(test_df).withColumn("dataset_split", F.lit("test"))
+    
+    # Unir de nuevo para guardar
+    df_curated = train_scaled.unionByName(test_scaled)
+
+    # 6. Clasificación ligera para Feature Importance (100 árboles) entrenado SOLO en train
     rf = RandomForestClassifier(labelCol="label", featuresCol="scaled_features", numTrees=100, seed=42)
-    rf_model = rf.fit(df_curated)
+    rf_model = rf.fit(train_scaled)
     
     # Extraer importancia
     importances = rf_model.featureImportances.toArray()
@@ -71,14 +80,14 @@ def main():
         key=lambda x: x["importance"], reverse=True
     )
 
-    # 4. Guardar Metadatos (Top 5 features)
+    # 7. Guardar Metadatos (Top 5 features)
     os.makedirs(OUTPUT_META_PATH, exist_ok=True)
     with open(os.path.join(OUTPUT_META_PATH, "feature_importance.json"), "w") as f:
         json.dump(feature_importance_list[:5], f, indent=4)
 
-    # 5. Guardar Datos Curated (solo columnas necesarias para análisis futuro)
-    df_curated.select("id", "diagnosis", "scaled_features", "label") \
-        .write.mode("overwrite").parquet(OUTPUT_DATA_PATH)
+    # 8. Guardar Datos Curated (particionando por train/test)
+    df_curated.select("id", "diagnosis", "scaled_features", "label", "dataset_split") \
+        .write.mode("overwrite").partitionBy("dataset_split").parquet(OUTPUT_DATA_PATH)
 
     print(f"Job 07 finalizado. Top 5 features: {feature_importance_list[:5]}")
     spark.stop()

@@ -143,5 +143,38 @@ Se ha implementado la capa de limpieza para transformar los datos brutos de la c
 | `05_limpieza_genomics.py` | 100,000 | 100,000 | Finalizado con éxito ✓ |
 | `06_limpieza_images.py` | 1,578 | 1,575 | Finalizado con éxito ✓ |
 
+**Preparación para análisis avanzado (Curated Layer)**
+Se ha procedido a la creación de la capa Curated, donde los datos se transforman y estructuran específicamente para alimentar modelos de Machine Learning y análisis estadísticos avanzados.
+
+**Hitos logrados:**
+- **Preparación para Clasificación**: Creación de un dataset clínico escalado y extracción de la importancia de las variables para el diagnóstico.
+- **Preparación para Clustering**: Reducción de dimensionalidad mediante PCA y segmentación de pacientes mediante K-Means en el dataset genómico.
+- **Detección de Anomalías**: Identificación de registros atípicos (top 1%) en los datos genómicos para asegurar la calidad del análisis posterior.
+
+**Detalle de los jobs de la capa Curated:**
+
+- **Clasificación Clínica (`07_curated_clasificacion.py`)**:
+    - **Acciones**: Escalado de características con `StandardScaler` y entrenamiento de un Random Forest ligero para identificar las variables más influyentes.
+    - **Resultados**: Se generó un archivo de metadatos con el Top 5 de variables (ej. `radius_worst`, `perimeter_worst`).
+- **Clustering Genómico (`08_curated_clustering.py`)**:
+    - **Acciones**: Aplicación de PCA (k=2) sobre las 130 columnas de expresión y ejecución de K-Means (k=3) para asignar un `cluster_id` a cada paciente.
+    - **Resultados**: Dataset listo para visualización tipo Scatter Plot.
+- **Detección de Anomalías Genómicas (`09_curated_anomalias.py`)**:
+    - **Acciones**: Cálculo de un score de anomalía basado en la distancia en el espacio PCA y filtrado del percentil 99.
+    - **Resultados**: Identificación de los casos más inusuales del dataset genómico.
+
+**Correcciones aplicadas:**
+- **Prevención de Data Leakage**: En el Job 07 de clasificación, se introdujo una división de datos (Train/Test) *antes* de aplicar el `StandardScaler`. El escalador y el modelo de Random Forest se ajustan (`fit`) exclusivamente sobre el set de entrenamiento, evitando que el modelo conozca la distribución de los datos de prueba. Ambos sets se unen para guardarse particionados por `dataset_split`.
+- **Filtrado dinámico de tipos**: Se mejoraron los jobs para detectar automáticamente solo las columnas numéricas (`double`, `float`, `int`) para los ensambladores de vectores, evitando fallos con columnas categóricas de metadatos.
+- **Manejo de nulos en vectores**: Se configuró `handleInvalid="skip"` en los procesos de ML para garantizar que los modelos solo se entrenen con registros completos y válidos.
+
+**Resultados de la capa Curated:**
+
+| Job | Entrada (Cleanse) | Salida (Curated) | Estado |
+|-----|-------------------|------------------|--------|
+| `07_curated_clasificacion.py` | `clinical` | `clinical_classification` | Finalizado ✓ |
+| `08_curated_clustering.py` | `genomics` | `genomics_clustering` | Finalizado ✓ |
+| `09_curated_anomalias.py` | `genomics` | `genomics_anomalies` | Finalizado ✓ |
+
 ---
 *(Este archivo se continuará actualizando con las siguientes fases del proyecto.)*
