@@ -1,0 +1,15 @@
+{
+  "job": "06_limpieza_images",
+  "timestamp_utc": "2026-05-12T14:02:41.427479+00:00",
+  "status": "SUCCESS",
+  "input_path": "/datalake/raw/images_meta",
+  "output_path": "/datalake/cleanse/images",
+  "initial_rows": 1578,
+  "quality_final": {
+    "total_rows": 1575
+  },
+  "dropped_by_hash": 3,
+  "dropped_by_dimensions": 0,
+  "dropped_by_category": 0,
+  "final_rows": 1575
+}

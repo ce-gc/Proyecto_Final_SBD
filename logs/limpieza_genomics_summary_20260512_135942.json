@@ -1,0 +1,12 @@
+{
+  "job": "05_limpieza_genomics",
+  "timestamp_utc": "2026-05-12T13:58:36.143685+00:00",
+  "status": "SUCCESS",
+  "input_path": "/datalake/raw/genomics/breast_cancer_expression_ssa_synthetic.parquet",
+  "output_path": "/datalake/cleanse/genomics",
+  "initial_rows": 100000,
+  "quality_final": {
+    "total_rows": 100000
+  },
+  "final_rows": 100000
+}
