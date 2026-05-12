@@ -1,0 +1,171 @@
+{
+  "job": "04_limpieza_clinical",
+  "timestamp_utc": "2026-05-12T14:07:38.651548+00:00",
+  "status": "SUCCESS",
+  "input_path": "/datalake/raw/clinical/breast-cancer.parquet",
+  "output_path": "/datalake/cleanse/clinical",
+  "initial_rows": 569,
+  "initial_cols": 32,
+  "dropped_empty_cols": [],
+  "duplicates_removed": 0,
+  "invalid_diagnosis": 0,
+  "imputation": {},
+  "outliers": {
+    "radius_mean": {
+      "n_outliers": 15,
+      "lower_bound": 5.685,
+      "upper_bound": 21.725
+    },
+    "texture_mean": {
+      "n_outliers": 8,
+      "lower_bound": 7.905,
+      "upper_bound": 29.945
+    },
+    "perimeter_mean": {
+      "n_outliers": 15,
+      "lower_bound": 32.825,
+      "upper_bound": 145.745
+    },
+    "area_mean": {
+      "n_outliers": 37,
+      "lower_bound": -91.8,
+      "upper_bound": 1273.8
+    },
+    "smoothness_mean": {
+      "n_outliers": 7,
+      "lower_bound": 0.0586,
+      "upper_bound": 0.1327
+    },
+    "compactness_mean": {
+      "n_outliers": 18,
+      "lower_bound": -0.0323,
+      "upper_bound": 0.2269
+    },
+    "concavity_mean": {
+      "n_outliers": 21,
+      "lower_bound": -0.1113,
+      "upper_bound": 0.2644
+    },
+    "concave points_mean": {
+      "n_outliers": 18,
+      "lower_bound": -0.0548,
+      "upper_bound": 0.1455
+    },
+    "symmetry_mean": {
+      "n_outliers": 16,
+      "lower_bound": 0.1118,
+      "upper_bound": 0.2454
+    },
+    "fractal_dimension_mean": {
+      "n_outliers": 16,
+      "lower_bound": 0.0452,
+      "upper_bound": 0.0785
+    },
+    "radius_se": {
+      "n_outliers": 44,
+      "lower_bound": -0.1254,
+      "upper_bound": 0.8286
+    },
+    "texture_se": {
+      "n_outliers": 21,
+      "lower_bound": -0.1128,
+      "upper_bound": 2.4117
+    },
+    "perimeter_se": {
+      "n_outliers": 42,
+      "lower_bound": -0.905,
+      "upper_bound": 5.791
+    },
+    "area_se": {
+      "n_outliers": 65,
+      "lower_bound": -21.99,
+      "upper_bound": 84.25
+    },
+    "smoothness_se": {
+      "n_outliers": 30,
+      "lower_bound": 0.0008,
+      "upper_bound": 0.0124
+    },
+    "compactness_se": {
+      "n_outliers": 30,
+      "lower_bound": -0.0153,
+      "upper_bound": 0.0605
+    },
+    "concavity_se": {
+      "n_outliers": 30,
+      "lower_bound": -0.0229,
+      "upper_bound": 0.0784
+    },
+    "concave points_se": {
+      "n_outliers": 20,
+      "lower_bound": -0.0028,
+      "upper_bound": 0.025
+    },
+    "symmetry_se": {
+      "n_outliers": 29,
+      "lower_bound": 0.0033,
+      "upper_bound": 0.035
+    },
+    "fractal_dimension_se": {
+      "n_outliers": 30,
+      "lower_bound": -0.0011,
+      "upper_bound": 0.0078
+    },
+    "radius_worst": {
+      "n_outliers": 19,
+      "lower_bound": 4.79,
+      "upper_bound": 26.71
+    },
+    "texture_worst": {
+      "n_outliers": 5,
+      "lower_bound": 8.585,
+      "upper_bound": 41.905
+    },
+    "perimeter_worst": {
+      "n_outliers": 19,
+      "lower_bound": 24.125,
+      "upper_bound": 184.085
+    },
+    "area_worst": {
+      "n_outliers": 45,
+      "lower_bound": -259.75,
+      "upper_bound": 1807.05
+    },
+    "smoothness_worst": {
+      "n_outliers": 8,
+      "lower_bound": 0.0737,
+      "upper_bound": 0.1881
+    },
+    "compactness_worst": {
+      "n_outliers": 20,
+      "lower_bound": -0.1269,
+      "upper_bound": 0.6039
+    },
+    "concavity_worst": {
+      "n_outliers": 12,
+      "lower_bound": -0.282,
+      "upper_bound": 0.7753
+    },
+    "symmetry_worst": {
+      "n_outliers": 23,
+      "lower_bound": 0.1508,
+      "upper_bound": 0.4164
+    },
+    "fractal_dimension_worst": {
+      "n_outliers": 25,
+      "lower_bound": 0.0409,
+      "upper_bound": 0.1223
+    }
+  },
+  "rows_dropped_no_diagnosis": 0,
+  "quality_final": {
+    "total_rows": 569,
+    "null_counts": {},
+    "diagnosis_distribution": {
+      "B": 357,
+      "M": 212
+    }
+  },
+  "final_rows": 569,
+  "final_cols": 34
+}

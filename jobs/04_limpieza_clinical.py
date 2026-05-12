@@ -27,7 +27,7 @@ DATALAKE_ROOT = "/datalake" if os.path.exists("/datalake") else os.path.join(
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 RAW_PARQUET_PATH = os.path.join(DATALAKE_ROOT, "raw", "clinical", "breast-cancer.parquet")
-CLEANSE_OUTPUT_PATH = os.path.join(DATALAKE_ROOT, "cleanse", "clinical", "breast-cancer.parquet")
+CLEANSE_OUTPUT_PATH = os.path.join(DATALAKE_ROOT, "cleanse", "clinical")
 LOG_DIR = os.path.join(PROJECT_ROOT, "logs")
 
 # Columnas del dataset clínico
@@ -348,12 +348,12 @@ def compute_quality_summary(df, logger):
 
 def persist_clean_parquet(df, output_path, logger):
     """
-    Persiste el DataFrame limpio como Parquet.
+    Persiste el DataFrame limpio como Parquet particionado por diagnosis.
     Idempotente: si ya existe, lo sobreescribe para reflejar la última limpieza.
     """
-    logger.info("Escribiendo Parquet limpio en '%s'...", output_path)
-    os.makedirs(os.path.dirname(output_path), exist_ok=True)
-    df.coalesce(1).write.mode("overwrite").parquet(output_path)
+    logger.info("Escribiendo Parquet limpio particionado en '%s'...", output_path)
+    os.makedirs(output_path, exist_ok=True)
+    df.coalesce(1).write.mode("overwrite").partitionBy(EXPECTED_TARGET_COL).parquet(output_path)
     logger.info("Parquet limpio escrito correctamente.")
     return True
 

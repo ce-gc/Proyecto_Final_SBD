@@ -2,7 +2,7 @@
 
 ## Registro de Actividades
 
-### Día 1: Fase 1 — Planificación y metodología
+### Fase 1 — Planificación y metodología
 Se ha procedido con la implementación de la infraestructura básica del proyecto, la selección de la metodología de trabajo y la definición del almacenamiento persistente.
 
 **Hitos logrados:**
@@ -24,7 +24,7 @@ Proyecto_Final/
 ├── tests/
 ```
 
-### Día 2: Fase 2 — Ingesta de datos (Raw Layer)
+### Fase 2 — Ingesta de datos (Raw Layer)
 Se ha iniciado la fase de ingesta para mover los datos desde las fuentes originales hacia la capa Raw, asegurando la consistencia y validando los esquemas iniciales.
 
 **Hitos logrados:**
@@ -106,6 +106,42 @@ Los tres jobs fueron refactorizados para soportar cualquier variación en los da
 - Modos de color: `1` (binario), `RGB`, `RGBA`
 - Canales: 1, 3, 4
 - Duplicados detectados por hash MD5: 3
+
+### Fase 3 — Procesado y arquitectura por capas (Cleanse Layer)
+Se ha implementado la capa de limpieza para transformar los datos brutos de la capa Raw en un formato estandarizado, limpio y listo para el análisis, siguiendo la arquitectura de capas del Data Lake.
+
+**Hitos logrados:**
+- **Creación de la capa Cleanse**: Implementación de jobs para el tratamiento de nulos, detección de outliers y normalización de variables.
+- **Particionamiento de datos**: Uso de `partitionBy` para organizar los datos limpios físicamente en el disco según categorías clave, optimizando el acceso a los datos.
+- **Trazabilidad y auditoría**: Inclusión de columnas técnicas (`_clean_ts`, `_clean_job`) en todos los datasets procesados para asegurar el linaje de los datos.
+
+**Detalle de los jobs de limpieza:**
+
+- **Limpieza clínica (`04_limpieza_clinical.py`)**:
+    - **Acciones**: Normalización de la columna `diagnosis` (M/B), cast de 30 columnas numéricas a `DoubleType` e imputación de nulos con la mediana.
+    - **Tratamiento de outliers**: Aplicación de la técnica IQR (rango intercuartílico) con factor 1.5 para clampear valores extremos, asegurando que los modelos no se vean sesgados por valores atípicos.
+    - **Estructura**: Particionado físico por `diagnosis` (M/B).
+    - **Resultados**: 688 valores clampeados en 29 columnas.
+- **Limpieza genómica (`05_limpieza_genomics.py`)**:
+    - **Acciones**: Limpieza de strings (trim/upper) en variables categóricas, imputación de nulos numéricos (edad, supervivencia) con la mediana y relleno de nulos categóricos con `"UNKNOWN"`.
+    - **Estructura**: Particionado físico por `molecular_subtype`.
+    - **Resultados**: Imputación de más de 20,000 nulos en métricas de supervivencia y recurrencia.
+- **Limpieza de metadatos de imágenes (`06_limpieza_images.py`)**:
+    - **Acciones**: Eliminación de duplicados por hash MD5 (3 detectados), filtrado de dimensiones inválidas y validación de categorías.
+    - **Estructura**: Particionado físico por `category` (`normal`, `benign`, `malignant`).
+
+**Problemas encontrados y soluciones:**
+- **Heterogeneidad en tipos de datos**: Se detectó que algunas columnas numéricas venían como string en la capa raw; se implementó un cast preventivo en los jobs de limpieza.
+- **Valores extremos en datos sintéticos**: El dataset genómico presentaba outliers significativos. En lugar de eliminar filas, se optó por un clampeo estadístico para no perder volumen de datos valioso.
+- **Estructura de carpetas física**: Se configuró Spark para que la estructura en `cleanse/` refleje las particiones lógicas (`category=normal`, etc.), lo que permite a los data scientists cargar solo las categorías de interés.
+
+**Resultados de la ejecución de limpieza:**
+
+| Job | Filas In | Filas Out | Estado |
+|-----|----------|-----------|--------|
+| `04_limpieza_clinical.py` | 569 | 569 | Finalizado con éxito ✓ |
+| `05_limpieza_genomics.py` | 100,000 | 100,000 | Finalizado con éxito ✓ |
+| `06_limpieza_images.py` | 1,578 | 1,575 | Finalizado con éxito ✓ |
 
 ---
 *(Este archivo se continuará actualizando con las siguientes fases del proyecto.)*
