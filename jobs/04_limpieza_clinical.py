@@ -1,20 +1,6 @@
 """
 04_limpieza_clinical.py
 =======================
-Limpieza de datos clínicos (breast cancer) ingestados en la capa raw.
-
-Lee el Parquet de   /datalake/raw/clinical/breast-cancer.parquet
-Escribe limpio en   /datalake/cleanse/clinical/breast-cancer.parquet
-
-Transformaciones aplicadas:
-  1. Eliminación de columnas completamente nulas o vacías.
-  2. Eliminación de filas duplicadas por ID.
-  3. Normalización del campo diagnosis (M/B → mayúsculas, valores inválidos → null).
-  4. Cast de columnas numéricas a DoubleType.
-  5. Imputación de nulos numéricos con la mediana de cada columna.
-  6. Detección y clamp de outliers mediante IQR (×1.5).
-  7. Eliminación de filas sin diagnosis válido tras limpieza.
-  8. Adición de metadatos de auditoría (_clean_ts, _clean_job).
 
 Uso (dentro del contenedor):
   spark-submit jobs/04_limpieza_clinical.py

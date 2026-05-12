@@ -1,0 +1,20 @@
+2026-05-12 13:58:36 | INFO     | ============================================================
+2026-05-12 13:58:36 | INFO     | INICIO - Limpieza del dataset genómico
+2026-05-12 13:58:36 | INFO     | ============================================================
+2026-05-12 13:58:41 | INFO     | SparkSession creada.
+2026-05-12 13:58:44 | INFO     | Datos raw leídos: 100000 filas.
+2026-05-12 13:59:04 | INFO     | No se encontraron columnas completamente vacías.
+2026-05-12 13:59:07 | INFO     | No se encontraron duplicados.
+2026-05-12 13:59:08 | INFO     | Columnas categóricas limpiadas y nulos rellenados con 'UNKNOWN'.
+2026-05-12 13:59:13 | INFO     | Columna 'age_at_diagnosis': 497 nulos imputados con mediana=54.3433.
+2026-05-12 13:59:18 | INFO     | Columna 'survival_months': 10252 nulos imputados con mediana=0.0000.
+2026-05-12 13:59:23 | INFO     | Columna 'recurrence_free_months': 12159 nulos imputados con mediana=-0.0034.
+2026-05-12 13:59:26 | INFO     | Total de registros tras limpieza: 100000
+2026-05-12 13:59:26 | INFO     | Escribiendo Parquet limpio particionado por 'molecular_subtype' en '/datalake/cleanse/genomics'...
+2026-05-12 13:59:42 | INFO     | Parquet limpio escrito correctamente.
+2026-05-12 13:59:42 | INFO     | ============================================================
+2026-05-12 13:59:42 | INFO     | FIN - Limpieza completada con éxito.
+2026-05-12 13:59:42 | INFO     |   Filas: 100000 → 100000
+2026-05-12 13:59:42 | INFO     | ============================================================
+2026-05-12 13:59:42 | INFO     | Resumen de ejecución guardado en '/work/logs/limpieza_genomics_summary_20260512_135942.json'.
+2026-05-12 13:59:42 | INFO     | SparkSession cerrada.
