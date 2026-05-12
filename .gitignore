@@ -1,0 +1,24 @@
+# Datalake data (to avoid uploading large/private datasets)
+datalake/raw/
+datalake/cleanse/
+datalake/curated/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+ENV/
+env/
+.env
+
+# Logs
+logs/*.log
+logs/*.json
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
