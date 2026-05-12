@@ -14,11 +14,13 @@ env/
 .env
 
 # Logs
-logs/*.log
-logs/*.json
+logs/
 
 # IDEs
 .vscode/
 .idea/
 *.swp
 *.swo
+
+# Models
+models/
