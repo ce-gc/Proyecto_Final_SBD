@@ -57,33 +57,39 @@ def main():
     metrics_report["geographic_distribution"] = geo_metrics
     metrics_report["geographic_interpretation"] = "Analizamos la representación geográfica para detectar sesgos. Las diferencias en las medias de expresión génica o en el recuento por país muestran cómo los datos sintéticos capturan la diversidad regional, lo cual es crítico para que los modelos no se sesguen hacia poblaciones mayoritarias."
 
+    from sklearn.decomposition import PCA
+
     # --- Clustering K-Means ---
     # Escalar datos numéricos para K-Means
     X = df[expression_cols].fillna(0)
     scaler = StandardScaler()
     X_scaled = scaler.fit_transform(X)
     
+    # Consistencia con 08_curated_clustering.py: PCA con k=2 para clustering
+    pca_2 = PCA(n_components=2, random_state=42)
+    X_pca_2 = pca_2.fit_transform(X_scaled)
+    
     inertias = []
     silhouette_scores = {}
     
     for k in range(2, 7):
         kmeans = KMeans(n_clusters=k, random_state=42, n_init=10)
-        labels = kmeans.fit_predict(X_scaled)
+        labels = kmeans.fit_predict(X_pca_2)
         inertias.append({"k": k, "inertia": float(kmeans.inertia_)})
         if k > 1:
             # Usar muestra para 100k registros para evitar O(N^2)
-            score = float(silhouette_score(X_scaled, labels, sample_size=1000, random_state=42))
+            score = float(silhouette_score(X_pca_2, labels, sample_size=1000, random_state=42))
             silhouette_scores[k] = score
 
     # Seleccionamos k=3 como en el job 08
     chosen_k = 3
     kmeans_opt = KMeans(n_clusters=chosen_k, random_state=42, n_init=10)
-    df['cluster'] = kmeans_opt.fit_predict(X_scaled)
+    df['cluster'] = kmeans_opt.fit_predict(X_pca_2)
     
-    sil_score = float(silhouette_score(X_scaled, df['cluster'], sample_size=1000, random_state=42))
+    sil_score = float(silhouette_score(X_pca_2, df['cluster'], sample_size=1000, random_state=42))
     # Para sample_sil_values, solo podemos calcularlo para una muestra si queremos que termine rápido
     sample_indices = np.random.RandomState(42).choice(len(df), size=min(5000, len(df)), replace=False)
-    sample_sil_values = silhouette_samples(X_scaled[sample_indices], df.loc[sample_indices, 'cluster'])
+    sample_sil_values = silhouette_samples(X_pca_2[sample_indices], df.loc[sample_indices, 'cluster'])
     
     cluster_metrics = []
     for i in range(chosen_k):
@@ -109,11 +115,16 @@ def main():
         "global_silhouette": sil_score,
         "cluster_details": cluster_metrics
     }
-    metrics_report["kmeans_interpretation"] = f"El K-Means (K={chosen_k}) obtiene un silhouette score global de {sil_score:.3f}. La inercia y los perfiles de los clusters revelan distintos subtipos biológicos en los pacientes; esto sugiere que el cáncer se presenta con firmas genómicas diferenciadas (agrupadas aquí en {chosen_k} grupos), lo que apoya tratamientos personalizados."
+    metrics_report["kmeans_interpretation"] = f"El K-Means (K={chosen_k}) sobre los 2 primeros componentes principales obtiene un silhouette score global de {sil_score:.3f}. La inercia y los perfiles de los clusters revelan distintos subtipos biológicos en los pacientes; esto sugiere que el cáncer se presenta con firmas genómicas diferenciadas (agrupadas aquí en {chosen_k} grupos), lo que apoya tratamientos personalizados."
 
     # --- Isolation Forest (Detección de anomalías) ---
+    # Consistencia con 09_curated_anomalias.py: PCA con k=5 para detección de anomalías
+    pca_5 = PCA(n_components=5, random_state=42)
+    X_pca_5 = pca_5.fit_transform(X_scaled)
+    
     iso = IsolationForest(contamination=0.01, random_state=42)
-    df['anomaly_label'] = iso.fit_predict(X_scaled)  # -1 for outliers, 1 for inliers
+    df['anomaly_label'] = iso.fit_predict(X_pca_5)  # -1 for outliers, 1 for inliers
+
     
     anomalies_count = int((df['anomaly_label'] == -1).sum())
     total_count = len(df)

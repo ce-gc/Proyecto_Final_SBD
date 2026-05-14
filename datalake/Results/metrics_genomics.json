@@ -263,88 +263,93 @@
         "inertias": [
             {
                 "k": 2,
-                "inertia": 9386745.964288285
+                "inertia": 687038.1213564523
             },
             {
                 "k": 3,
-                "inertia": 9026405.153641038
+                "inertia": 330782.4126836139
             },
             {
                 "k": 4,
-                "inertia": 8748404.311583133
+                "inertia": 121179.48127006306
             },
             {
                 "k": 5,
-                "inertia": 8698886.035413422
+                "inertia": 109167.58123479343
             },
             {
                 "k": 6,
-                "inertia": 8661362.74014907
+                "inertia": 97277.96305714044
             }
         ],
         "silhouette_scores": {
-            "2": 0.15924836366937095,
-            "3": 0.15313337498447013,
-            "4": 0.06373095779815975,
-            "5": 0.013497290924719015,
-            "6": 0.010001741669720036
+            "2": 0.6200901217511106,
+            "3": 0.6729167797386942,
+            "4": 0.6798062137946972,
+            "5": 0.49909685617023547,
+            "6": 0.4175781332420722
         },
         "chosen_k": 3,
-        "global_silhouette": 0.15313337498447013,
+        "global_silhouette": 0.6729167797386942,
         "cluster_details": [
             {
                 "cluster_id": 0,
-                "size": 13988,
-                "mean_silhouette": 0.06119112022324028,
+                "size": 15214,
+                "mean_silhouette": 0.6656751362107771,
                 "profile_mean": {
-                    "tumor_grade": 1.9393034100845234,
-                    "tumor_size_cm": 3.60862672968003,
-                    "lymph_nodes_positive": 2.001929467085856,
-                    "BMI": 27.11072157404195,
-                    "ESR1_expr": -1.5943099687721989
+                    "tumor_grade": 1.9373156342182891,
+                    "tumor_size_cm": 3.6037243442792675,
+                    "lymph_nodes_positive": 1.998088892663259,
+                    "BMI": 27.108434153203582,
+                    "ESR1_expr": -1.3602272189235494
                 }
             },
             {
                 "cluster_id": 1,
-                "size": 65196,
-                "mean_silhouette": 0.2027497348392804,
+                "size": 63974,
+                "mean_silhouette": 0.6327748401776825,
                 "profile_mean": {
-                    "tumor_grade": 2.101890506198511,
-                    "tumor_size_cm": 3.6097443604809474,
-                    "lymph_nodes_positive": 2.007646344502787,
-                    "BMI": 27.260467120784625,
-                    "ESR1_expr": 1.9815886678949566
+                    "tumor_grade": 2.105482842859685,
+                    "tumor_size_cm": 3.610842467739797,
+                    "lymph_nodes_positive": 2.0085116841154638,
+                    "BMI": 27.263996386337237,
+                    "ESR1_expr": 1.9937190131346876
                 }
             },
             {
                 "cluster_id": 2,
-                "size": 20816,
-                "mean_silhouette": 0.04379304043129496,
+                "size": 20812,
+                "mean_silhouette": 0.7430576877090784,
                 "profile_mean": {
-                    "tumor_grade": 1.7142436294005008,
-                    "tumor_size_cm": 3.589133161762698,
-                    "lymph_nodes_positive": 1.9890275221546114,
-                    "BMI": 26.838858313610704,
-                    "ESR1_expr": -1.906347418719245
+                    "tumor_grade": 1.714236605608211,
+                    "tumor_size_cm": 3.589405924028926,
+                    "lymph_nodes_positive": 1.989509693173287,
+                    "BMI": 26.838489505028733,
+                    "ESR1_expr": -1.9064121392041709
                 }
             }
         ]
     },
-    "kmeans_interpretation": "El K-Means (K=3) obtiene un silhouette score global de 0.153. La inercia y los perfiles de los clusters revelan distintos subtipos biológicos en los pacientes; esto sugiere que el cáncer se presenta con firmas genómicas diferenciadas (agrupadas aquí en 3 grupos), lo que apoya tratamientos personalizados.",
+    "kmeans_interpretation": "El K-Means (K=3) sobre los 2 primeros componentes principales obtiene un silhouette score global de 0.673. La inercia y los perfiles de los clusters revelan distintos subtipos biológicos en los pacientes; esto sugiere que el cáncer se presenta con firmas genómicas diferenciadas (agrupadas aquí en 3 grupos), lo que apoya tratamientos personalizados.",
     "isolation_forest": {
         "anomalies_detected": 1000,
         "anomalies_percentage": 1.0,
         "anomalies_by_country": {
-            "NIGERIA": 645,
-            "USA": 325,
-            "ETHIOPIA": 13,
-            "NETHERLANDS": 9,
-            "GHANA": 5,
-            "FRANCE": 3
+            "NIGERIA": 344,
+            "ETHIOPIA": 146,
+            "GHANA": 135,
+            "USA": 119,
+            "FRANCE": 95,
+            "NETHERLANDS": 80,
+            "KENYA": 36,
+            "UGANDA": 26,
+            "UK": 10,
+            "GERMANY": 9
         },
         "anomalies_by_cluster": {
-            "2": 970,
-            "0": 30
+            "0": 471,
+            "2": 463,
+            "1": 66
         }
     },
     "isolation_forest_interpretation": "Isolation Forest marcó un 1.00% de los registros como anómalos. Estos pacientes presentan perfiles de expresión génica extremadamente raros, lo cual puede deberse a casos de cáncer muy atípicos, mutaciones severas o ruido de medición. Detectarlos es vital para no degradar los modelos predictivos."

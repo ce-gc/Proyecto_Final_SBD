@@ -91,15 +91,23 @@ def main():
     metrics_report["high_correlations"] = [{"var1": v1, "var2": v2, "corr": c} for v1, v2, c in high_corr]
     metrics_report["correlations_interpretation"] = "Se detectan pares de variables con correlación de Pearson superior a 0.9 (ej. radius_mean y perimeter_mean). Estas variables redundantes aportan casi la misma información clínica, lo que sugiere que podrían eliminarse en futuros refinamientos del modelo para evitar multicolinealidad y sobreajuste."
 
+    from sklearn.preprocessing import StandardScaler
+
     # --- Modelo de Clasificación ---
     X = df[NUMERIC_COLS]
     y = df['diagnosis'].apply(lambda x: 1 if x == 'M' else 0)
     
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+    
+    # Consistencia con 07_curated_clasificacion.py: Escalar datos
+    scaler = StandardScaler()
+    X_train_scaled = scaler.fit_transform(X_train)
+    X_test_scaled = scaler.transform(X_test)
+    
     rf = RandomForestClassifier(n_estimators=100, random_state=42)
-    rf.fit(X_train, y_train)
-    y_pred = rf.predict(X_test)
-    y_prob = rf.predict_proba(X_test)[:, 1]
+    rf.fit(X_train_scaled, y_train)
+    y_pred = rf.predict(X_test_scaled)
+    y_prob = rf.predict_proba(X_test_scaled)[:, 1]
     
     importances = rf.feature_importances_
     feat_imp = sorted([{"feature": f, "importance": float(i)} for f, i in zip(NUMERIC_COLS, importances)],
