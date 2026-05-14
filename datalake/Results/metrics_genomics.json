@@ -1,0 +1,351 @@
+{
+    "geographic_distribution": {
+        "counts": {
+            "USA": 29992,
+            "NIGERIA": 15041,
+            "SOUTH_AFRICA": 12497,
+            "KENYA": 9997,
+            "UK": 7528,
+            "GERMANY": 5107,
+            "UGANDA": 4951,
+            "FRANCE": 4074,
+            "ETHIOPIA": 3949,
+            "GHANA": 3499,
+            "NETHERLANDS": 3365
+        },
+        "stats": {
+            "ETHIOPIA": {
+                "tumor_grade": {
+                    "mean": 1.3275996872556686,
+                    "std": 0.4693991436710883
+                },
+                "tumor_size_cm": {
+                    "mean": 3.609063996429884,
+                    "std": 1.7419273065860492
+                },
+                "lymph_nodes_positive": {
+                    "mean": 1.999540825478701,
+                    "std": 1.443498581954076
+                },
+                "BMI": {
+                    "mean": 26.565616820961697,
+                    "std": 5.014156952322049
+                },
+                "ESR1_expr": {
+                    "mean": -1.776283020225928,
+                    "std": 1.343637457277687
+                }
+            },
+            "FRANCE": {
+                "tumor_grade": {
+                    "mean": 2.6686884003032603,
+                    "std": 0.470744331545155
+                },
+                "tumor_size_cm": {
+                    "mean": 3.640526745218872,
+                    "std": 1.687714509812076
+                },
+                "lymph_nodes_positive": {
+                    "mean": 1.9919670210632223,
+                    "std": 1.4050320988160567
+                },
+                "BMI": {
+                    "mean": 27.847818876110605,
+                    "std": 6.186959489806355
+                },
+                "ESR1_expr": {
+                    "mean": -0.6090657245629254,
+                    "std": 1.9366995607450024
+                }
+            },
+            "GERMANY": {
+                "tumor_grade": {
+                    "mean": 2.6722570216205295,
+                    "std": 0.4694380119926124
+                },
+                "tumor_size_cm": {
+                    "mean": 3.6114553273838186,
+                    "std": 1.716821952606043
+                },
+                "lymph_nodes_positive": {
+                    "mean": 2.0178351863710837,
+                    "std": 1.4174842305763926
+                },
+                "BMI": {
+                    "mean": 27.75602158775658,
+                    "std": 6.15691146664149
+                },
+                "ESR1_expr": {
+                    "mean": 1.7799028722990125,
+                    "std": 1.2308060650849435
+                }
+            },
+            "GHANA": {
+                "tumor_grade": {
+                    "mean": 1.3305858110097144,
+                    "std": 0.47049335502733636
+                },
+                "tumor_size_cm": {
+                    "mean": 3.62272217487901,
+                    "std": 1.6913062864851394
+                },
+                "lymph_nodes_positive": {
+                    "mean": 2.028269178654279,
+                    "std": 1.4360771812324173
+                },
+                "BMI": {
+                    "mean": 26.498612825437643,
+                    "std": 5.15378892949522
+                },
+                "ESR1_expr": {
+                    "mean": -1.7724318219753796,
+                    "std": 1.3325147586776
+                }
+            },
+            "KENYA": {
+                "tumor_grade": {
+                    "mean": 1.33082938876312,
+                    "std": 0.4705359573718529
+                },
+                "tumor_size_cm": {
+                    "mean": 3.6148081704041366,
+                    "std": 1.7142713885691854
+                },
+                "lymph_nodes_positive": {
+                    "mean": 2.008227612261,
+                    "std": 1.4271726964836458
+                },
+                "BMI": {
+                    "mean": 26.496171719034077,
+                    "std": 4.934014769928978
+                },
+                "ESR1_expr": {
+                    "mean": 1.760373047359321,
+                    "std": 1.1668765692728331
+                }
+            },
+            "NETHERLANDS": {
+                "tumor_grade": {
+                    "mean": 2.6492628992628995,
+                    "std": 0.47727407969151814
+                },
+                "tumor_size_cm": {
+                    "mean": 3.5766159677595097,
+                    "std": 1.6735482161329327
+                },
+                "lymph_nodes_positive": {
+                    "mean": 2.0036685040278925,
+                    "std": 1.4066452349245677
+                },
+                "BMI": {
+                    "mean": 27.778004240450088,
+                    "std": 6.2485214837827305
+                },
+                "ESR1_expr": {
+                    "mean": -1.4773100870851905,
+                    "std": 1.3235473143279832
+                }
+            },
+            "NIGERIA": {
+                "tumor_grade": {
+                    "mean": 1.3341105472500343,
+                    "std": 0.4716947611817885
+                },
+                "tumor_size_cm": {
+                    "mean": 3.5818579458208206,
+                    "std": 1.6940030135550765
+                },
+                "lymph_nodes_positive": {
+                    "mean": 1.9920246170091753,
+                    "std": 1.410911238164899
+                },
+                "BMI": {
+                    "mean": 26.43853498293878,
+                    "std": 5.0095757975539215
+                },
+                "ESR1_expr": {
+                    "mean": -1.9760365763496603,
+                    "std": 1.4500421892076545
+                }
+            },
+            "SOUTH_AFRICA": {
+                "tumor_grade": {
+                    "mean": 1.327549342105263,
+                    "std": 0.4693387749074308
+                },
+                "tumor_size_cm": {
+                    "mean": 3.5799412968110227,
+                    "std": 1.6944900466430977
+                },
+                "lymph_nodes_positive": {
+                    "mean": 2.0183545104329212,
+                    "std": 1.4121767512038323
+                },
+                "BMI": {
+                    "mean": 26.501065149663923,
+                    "std": 5.013732192322207
+                },
+                "ESR1_expr": {
+                    "mean": 2.013482906871504,
+                    "std": 1.0483581832981503
+                }
+            },
+            "UGANDA": {
+                "tumor_grade": {
+                    "mean": 1.330564784053156,
+                    "std": 0.4704653721740029
+                },
+                "tumor_size_cm": {
+                    "mean": 3.619496864773168,
+                    "std": 1.7054724352322579
+                },
+                "lymph_nodes_positive": {
+                    "mean": 1.9612611085700429,
+                    "std": 1.3851237764779711
+                },
+                "BMI": {
+                    "mean": 26.58088508008066,
+                    "std": 4.898063118022994
+                },
+                "ESR1_expr": {
+                    "mean": 1.4921276205837066,
+                    "std": 1.253954329259699
+                }
+            },
+            "UK": {
+                "tumor_grade": {
+                    "mean": 2.668078131402814,
+                    "std": 0.4709352773202532
+                },
+                "tumor_size_cm": {
+                    "mean": 3.6104899841428275,
+                    "std": 1.672355980978365
+                },
+                "lymph_nodes_positive": {
+                    "mean": 1.9987120679294001,
+                    "std": 1.399780301162719
+                },
+                "BMI": {
+                    "mean": 27.80921578522121,
+                    "std": 6.2565344793642925
+                },
+                "ESR1_expr": {
+                    "mean": 1.8354012991345712,
+                    "std": 1.2363361992611843
+                }
+            },
+            "USA": {
+                "tumor_grade": {
+                    "mean": 2.6617864384644463,
+                    "std": 0.4731097557356529
+                },
+                "tumor_size_cm": {
+                    "mean": 3.6156302088028607,
+                    "std": 1.6892651168343158
+                },
+                "lymph_nodes_positive": {
+                    "mean": 2.0046114034744185,
+                    "std": 1.4173219851346455
+                },
+                "BMI": {
+                    "mean": 27.815181597269984,
+                    "std": 6.20353374503977
+                },
+                "ESR1_expr": {
+                    "mean": 1.4860251854491453,
+                    "std": 1.9409553625514087
+                }
+            }
+        }
+    },
+    "geographic_interpretation": "Analizamos la representación geográfica para detectar sesgos. Las diferencias en las medias de expresión génica o en el recuento por país muestran cómo los datos sintéticos capturan la diversidad regional, lo cual es crítico para que los modelos no se sesguen hacia poblaciones mayoritarias.",
+    "kmeans_clustering": {
+        "inertias": [
+            {
+                "k": 2,
+                "inertia": 9386745.964288285
+            },
+            {
+                "k": 3,
+                "inertia": 9026405.153641038
+            },
+            {
+                "k": 4,
+                "inertia": 8748404.311583133
+            },
+            {
+                "k": 5,
+                "inertia": 8698886.035413422
+            },
+            {
+                "k": 6,
+                "inertia": 8661362.74014907
+            }
+        ],
+        "silhouette_scores": {
+            "2": 0.15924836366937095,
+            "3": 0.15313337498447013,
+            "4": 0.06373095779815975,
+            "5": 0.013497290924719015,
+            "6": 0.010001741669720036
+        },
+        "chosen_k": 3,
+        "global_silhouette": 0.15313337498447013,
+        "cluster_details": [
+            {
+                "cluster_id": 0,
+                "size": 13988,
+                "mean_silhouette": 0.06119112022324028,
+                "profile_mean": {
+                    "tumor_grade": 1.9393034100845234,
+                    "tumor_size_cm": 3.60862672968003,
+                    "lymph_nodes_positive": 2.001929467085856,
+                    "BMI": 27.11072157404195,
+                    "ESR1_expr": -1.5943099687721989
+                }
+            },
+            {
+                "cluster_id": 1,
+                "size": 65196,
+                "mean_silhouette": 0.2027497348392804,
+                "profile_mean": {
+                    "tumor_grade": 2.101890506198511,
+                    "tumor_size_cm": 3.6097443604809474,
+                    "lymph_nodes_positive": 2.007646344502787,
+                    "BMI": 27.260467120784625,
+                    "ESR1_expr": 1.9815886678949566
+                }
+            },
+            {
+                "cluster_id": 2,
+                "size": 20816,
+                "mean_silhouette": 0.04379304043129496,
+                "profile_mean": {
+                    "tumor_grade": 1.7142436294005008,
+                    "tumor_size_cm": 3.589133161762698,
+                    "lymph_nodes_positive": 1.9890275221546114,
+                    "BMI": 26.838858313610704,
+                    "ESR1_expr": -1.906347418719245
+                }
+            }
+        ]
+    },
+    "kmeans_interpretation": "El K-Means (K=3) obtiene un silhouette score global de 0.153. La inercia y los perfiles de los clusters revelan distintos subtipos biológicos en los pacientes; esto sugiere que el cáncer se presenta con firmas genómicas diferenciadas (agrupadas aquí en 3 grupos), lo que apoya tratamientos personalizados.",
+    "isolation_forest": {
+        "anomalies_detected": 1000,
+        "anomalies_percentage": 1.0,
+        "anomalies_by_country": {
+            "NIGERIA": 645,
+            "USA": 325,
+            "ETHIOPIA": 13,
+            "NETHERLANDS": 9,
+            "GHANA": 5,
+            "FRANCE": 3
+        },
+        "anomalies_by_cluster": {
+            "2": 970,
+            "0": 30
+        }
+    },
+    "isolation_forest_interpretation": "Isolation Forest marcó un 1.00% de los registros como anómalos. Estos pacientes presentan perfiles de expresión génica extremadamente raros, lo cual puede deberse a casos de cáncer muy atípicos, mutaciones severas o ruido de medición. Detectarlos es vital para no degradar los modelos predictivos."
+}

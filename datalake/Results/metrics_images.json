@@ -1,0 +1,70 @@
+{
+    "class_balance": {
+        "counts": {
+            "benign": 891,
+            "malignant": 420,
+            "normal": 264
+        },
+        "percentages": {
+            "benign": 56.57142857142857,
+            "malignant": 26.666666666666668,
+            "normal": 16.761904761904763
+        }
+    },
+    "balance_interpretation": "El balance de clases muestra el porcentaje de imágenes normales, benignas y malignas. Un desbalance significativo (por ejemplo, muchas más normales que malignas) puede causar que un futuro modelo de visión computacional prediga la clase mayoritaria en exceso, por lo que podría ser necesario aplicar técnicas como Data Augmentation o class weights.",
+    "dimensions_stats": {
+        "benign": {
+            "width": {
+                "mean": 614.1930415263748,
+                "std": 117.45590995342012,
+                "min": 315.0,
+                "max": 1028.0
+            },
+            "height": {
+                "mean": 495.8574635241302,
+                "std": 78.03517571768131,
+                "min": 324.0,
+                "max": 719.0
+            }
+        },
+        "malignant": {
+            "width": {
+                "mean": 598.0166666666667,
+                "std": 125.0576657758011,
+                "min": 190.0,
+                "max": 1048.0
+            },
+            "height": {
+                "mean": 494.0357142857143,
+                "std": 60.35271158308711,
+                "min": 332.0,
+                "max": 677.0
+            }
+        },
+        "normal": {
+            "width": {
+                "mean": 651.1022727272727,
+                "std": 125.97836495160476,
+                "min": 391.0,
+                "max": 948.0
+            },
+            "height": {
+                "mean": 532.8522727272727,
+                "std": 86.90209601265681,
+                "min": 310.0,
+                "max": 712.0
+            }
+        }
+    },
+    "dimensions_interpretation": "Las estadísticas de dimensiones (ancho y alto) por clase revelan cuánta variabilidad existe en el dataset. Si la desviación estándar es alta o los máximos difieren mucho de los mínimos, significa que las ecografías o biopsias fueron capturadas en distintas resoluciones, lo que hará estricto e indispensable un redimensionamiento (resize/crop) antes de entrenar un CNN.",
+    "aspect_ratio": {
+        "stats": {
+            "mean": 1.2298998937706134,
+            "std": 0.16705130119045694,
+            "min": 0.5671641791044776,
+            "max": 2.0526315789473686
+        },
+        "outliers_count_extreme": 4
+    },
+    "aspect_ratio_interpretation": "El aspect ratio (ancho/alto) por imagen indica el formato de la captura. Se detectaron 4 imágenes extremadamente alargadas o achatadas. Estos outliers pueden ser recortes defectuosos, ruido o errores de etiquetado, y podrían deformarse gravemente al pasarlos por una red si no se aplica padding."
+}

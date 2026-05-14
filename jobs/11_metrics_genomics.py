@@ -25,18 +25,17 @@ os.makedirs(RESULTS_DIR, exist_ok=True)
 def main():
     print("Iniciando cálculo de métricas genómicas...")
     
+    # Cargar con pandas (pyarrow debe estar instalado)
     df = pd.read_parquet(CLEANSE_GENOMICS_PATH)
     
     metrics_report = {}
     
-    # Extraer variables numéricas (excluyendo IDs o categorías puras)
-    numeric_cols = df.select_dtypes(include=[np.number]).columns.tolist()
-    # Remover algunas que no son para expresión/edad, por ej. 'patient_id' si es numérica
-    if 'patient_id' in numeric_cols:
-        numeric_cols.remove('patient_id')
-    if 'id' in numeric_cols:
-        numeric_cols.remove('id')
-        
+    # Sincronizar selección de columnas con 08_curated_clustering.py
+    # En pandas, seleccionamos columnas numéricas que no sean las de metadata excluidas en el job 08
+    excluded_cols = ["age_at_diagnosis", "survival_months", "recurrence_free_months", "patient_id", "id"]
+    expression_cols = [c for c in df.select_dtypes(include=[np.number]).columns 
+                       if c not in excluded_cols]
+    
     # --- Distribución por país ---
     geo_metrics = {}
     if 'country' in df.columns:
@@ -44,11 +43,11 @@ def main():
         geo_metrics["counts"] = {str(k): int(v) for k, v in country_counts.items()}
         
         # Agrupar variables numéricas por país
-        geo_stats = df.groupby('country')[numeric_cols].agg(['mean', 'std'])
+        geo_stats = df.groupby('country')[expression_cols[:10]].agg(['mean', 'std'])
         stats_dict = {}
         for country in geo_stats.index:
             stats_dict[country] = {}
-            for col in numeric_cols[:5]: # Solo guardamos las primeras 5 variables para no saturar
+            for col in expression_cols[:5]: 
                 stats_dict[country][col] = {
                     "mean": float(geo_stats.loc[country, (col, 'mean')]),
                     "std": float(geo_stats.loc[country, (col, 'std')])
@@ -60,7 +59,7 @@ def main():
 
     # --- Clustering K-Means ---
     # Escalar datos numéricos para K-Means
-    X = df[numeric_cols].fillna(0)
+    X = df[expression_cols].fillna(0)
     scaler = StandardScaler()
     X_scaled = scaler.fit_transform(X)
     
@@ -72,25 +71,35 @@ def main():
         labels = kmeans.fit_predict(X_scaled)
         inertias.append({"k": k, "inertia": float(kmeans.inertia_)})
         if k > 1:
-            score = float(silhouette_score(X_scaled, labels))
+            # Usar muestra para 100k registros para evitar O(N^2)
+            score = float(silhouette_score(X_scaled, labels, sample_size=1000, random_state=42))
             silhouette_scores[k] = score
 
-    # Seleccionamos k=3 como ejemplo o el del "elbow" (aquí fijamos 3 para extraer métricas detalladas)
+    # Seleccionamos k=3 como en el job 08
     chosen_k = 3
     kmeans_opt = KMeans(n_clusters=chosen_k, random_state=42, n_init=10)
     df['cluster'] = kmeans_opt.fit_predict(X_scaled)
     
-    sil_score = float(silhouette_score(X_scaled, df['cluster']))
-    sample_sil_values = silhouette_samples(X_scaled, df['cluster'])
+    sil_score = float(silhouette_score(X_scaled, df['cluster'], sample_size=1000, random_state=42))
+    # Para sample_sil_values, solo podemos calcularlo para una muestra si queremos que termine rápido
+    sample_indices = np.random.RandomState(42).choice(len(df), size=min(5000, len(df)), replace=False)
+    sample_sil_values = silhouette_samples(X_scaled[sample_indices], df.loc[sample_indices, 'cluster'])
     
     cluster_metrics = []
     for i in range(chosen_k):
         cluster_data = df[df['cluster'] == i]
+        # Calcular silhouette medio del cluster usando la muestra
+        cluster_mask = df.loc[sample_indices, 'cluster'] == i
+        if cluster_mask.any():
+            mean_sil_cluster = float(sample_sil_values[cluster_mask].mean())
+        else:
+            mean_sil_cluster = 0.0
+            
         cluster_metrics.append({
             "cluster_id": i,
             "size": int(len(cluster_data)),
-            "mean_silhouette": float(sample_sil_values[df['cluster'] == i].mean()),
-            "profile_mean": {col: float(cluster_data[col].mean()) for col in numeric_cols[:5]}
+            "mean_silhouette": mean_sil_cluster,
+            "profile_mean": {col: float(cluster_data[col].mean()) for col in expression_cols[:5]}
         })
 
     metrics_report["kmeans_clustering"] = {
@@ -105,7 +114,6 @@ def main():
     # --- Isolation Forest (Detección de anomalías) ---
     iso = IsolationForest(contamination=0.01, random_state=42)
     df['anomaly_label'] = iso.fit_predict(X_scaled)  # -1 for outliers, 1 for inliers
-    df['anomaly_score'] = iso.decision_function(X_scaled)
     
     anomalies_count = int((df['anomaly_label'] == -1).sum())
     total_count = len(df)
