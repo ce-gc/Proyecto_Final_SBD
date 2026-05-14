@@ -176,5 +176,40 @@ Se ha procedido a la creación de la capa Curated, donde los datos se transforma
 | `08_curated_clustering.py` | `genomics` | `genomics_clustering` | Finalizado ✓ |
 | `09_curated_anomalias.py` | `genomics` | `genomics_anomalies` | Finalizado ✓ |
 
+### Fase 4 — Análisis avanzado
+En esta fase se han implementado scripts de generación de métricas detalladas para cada dataset, consolidando los resultados en la capa de salida `Results` para su posterior visualización.
+
+**Métricas utilizadas y justificación:**
+
+- **Dataset Clínico (`10_metrics_clinical.py`)**:
+    - **Métricas**: Estadísticas descriptivas por clase, Ratio de Fisher, Correlación de Pearson y evaluación de Random Forest (Accuracy, F1, AUC-ROC, Matriz de Confusión).
+    - **Justificación**: El **Ratio de Fisher** permite cuantificar la capacidad de separación de cada variable antes del modelo. El uso de **RF con split 80/20** y **escalado** asegura que las métricas de rendimiento sean realistas y comparables con el job de la capa Curated.
+- **Dataset Genómico (`11_metrics_genomics.py`)**:
+    - **Métricas**: Distribución geográfica, Inercia (Codo), Silhouette Score y Anomaly Score (Isolation Forest).
+    - **Justificación**: Se aplicó **PCA (k=2)** para el clustering para reducir el ruido de las 130 variables de expresión, permitiendo identificar patrones biológicos claros. Para la detección de anomalías, se utilizó **PCA (k=5)** e **Isolation Forest** con una contaminación del 1% para aislar los perfiles más atípicos.
+- **Dataset de Imágenes (`12_metrics_images.py`)**:
+    - **Métricas**: Balance de clases, estadísticas de dimensiones (width/height), ratio de aspecto y estadísticas de brillo.
+    - **Justificación**: El **balance de clases** es crítico para evitar sesgos en modelos de visión. El **ratio de aspecto** detecta deformaciones en las capturas que podrían afectar al entrenamiento de redes neuronales.
+
+**Análisis de consistencia y errores corregidos:**
+
+Durante el desarrollo de los scripts de métricas, se detectaron y resolvieron los siguientes problemas técnicos:
+
+- **Inconsistencia Algorítmica**: Se detectó que los jobs de la capa `curated` aplicaban transformaciones (como PCA y escalado) que no estaban inicialmente en los scripts de métricas. Se corrigió añadiendo `StandardScaler` en el script clínico y `PCA` (k=2 y k=5) en el genómico para garantizar que las métricas evaluadas correspondan exactamente al procesamiento de la capa Curated.
+- **Optimización de Rendimiento**: Al trabajar con 100,000 registros genómicos, el cálculo del **Silhouette Score** (complejidad $O(N^2)$) bloqueaba el proceso. Se solucionó implementando un **muestreo aleatorio (sampling)** de 1,000 registros para el cálculo de siluetas, manteniendo la representatividad estadística con un tiempo de ejecución eficiente.
+- **Dependencias y Entorno**: Se identificó la falta de `scikit-learn` en el entorno local y en `requirements.txt`. Se actualizaron las dependencias y se adaptaron los scripts para leer Parquet mediante `pandas` y `pyarrow`, evitando dependencias de Spark en el nivel de reporte final.
+
+**Problemas detectados al usar datos de `/curated`:**
+
+- **Reducción excesiva de datos**: Los archivos en `/curated` (especialmente clasificación y clustering) solo guardaban los vectores de características y los IDs. Esto impedía generar métricas descriptivas legibles (medias de variables originales) o matrices de correlación. 
+- **Solución**: Los scripts de métricas cargan los datos desde `/cleanse` (que conserva todas las columnas originales tras la limpieza) y replican las transformaciones de `/curated` (escalado/PCA) en memoria para realizar el análisis avanzado.
+
+**Breve análisis de resultados (JSON):**
+
+- **Clínico**: Variables de tamaño (`radius_mean`, `area_mean`) muestran una separación clara, con valores significativamente más altos en casos malignos. El modelo alcanza un **AUC-ROC superior a 0.98**, demostrando la alta calidad de las variables seleccionadas.
+- **Genómico**: La distribución geográfica muestra una muestra diversa y equilibrada. Los clusters presentan perfiles de expresión diferenciados, validando la segmentación de subtipos moleculares.
+- **Imágenes**: Existe un ligero desbalance (56% benigno vs 26% maligno), lo que sugiere que el futuro modelo de IA deberá compensar este peso mediante *class weights* o *data augmentation*. La variabilidad en dimensiones confirma la necesidad de un paso de *resizing* estándar.
+
 ---
 *(Este archivo se continuará actualizando con las siguientes fases del proyecto.)*
+
