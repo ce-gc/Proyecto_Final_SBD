@@ -1,0 +1,1 @@
+El gráfico de tarta expone el balance de las clases en porcentaje. Esta vista es imprescindible para identificar desequilibrios significativos y justificar decisiones posteriores como la aplicación de oversampling o ajuste de pesos en el modelo.

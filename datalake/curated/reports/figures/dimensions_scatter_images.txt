@@ -1,0 +1,1 @@
+El scatter de alto por ancho revela la distribución de tamaños de imagen según clase. Ayuda a visualizar si hay diferencias sistemáticas de resolución entre clases o si existen claros outliers de tamaño que deban estandarizarse antes de entrenar redes neuronales.
