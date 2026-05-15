@@ -210,6 +210,36 @@ Durante el desarrollo de los scripts de métricas, se detectaron y resolvieron l
 - **Genómico**: La distribución geográfica muestra una muestra diversa y equilibrada. Los clusters presentan perfiles de expresión diferenciados, validando la segmentación de subtipos moleculares.
 - **Imágenes**: Existe un ligero desbalance (56% benigno vs 26% maligno), lo que sugiere que el futuro modelo de IA deberá compensar este peso mediante *class weights* o *data augmentation*. La variabilidad en dimensiones confirma la necesidad de un paso de *resizing* estándar.
 
+### Fase 5 — Representación gráfica
+Se ha desarrollado un conjunto de scripts en Python (`13_viz_clinical.py`, `14_viz_genomics.py` y `15_viz_images.py`) dedicados a la generación de visualizaciones a partir de los datos procesados. El objetivo es ofrecer una interpretación gráfica clara, estética y fundamentada clínicamente para cada uno de los tres datasets.
+
+**Visualizaciones generadas por dataset:**
+
+- **Clínico (`13_viz_clinical.py`)**:
+    - **Matriz de Correlación (Heatmap)**: Identifica variables altamente correlacionadas que pueden ser descartadas para evitar multicolinealidad.
+    - **Boxplots por Diagnóstico**: Visualiza la separabilidad de clases en las 6 variables con mayor ratio de Fisher, validando su poder predictivo.
+    - **Feature Importance (Barplot)**: Muestra el top 15 de variables morfológicas más importantes según un modelo Random Forest.
+    - **Curva ROC**: Evalúa el rendimiento del clasificador clínico graficando la tasa de verdaderos positivos frente a falsos positivos (anotando el AUC).
+    - **Matriz de Confusión**: Expone los verdaderos y falsos positivos/negativos tanto en valores absolutos como porcentuales, resaltando la tasa de falsos negativos.
+
+- **Genómico (`14_viz_genomics.py`)**:
+    - **Elbow Plot (Codo)**: Justifica la elección de K=3 clusters visualizando la inercia del modelo K-Means frente a distintos valores de K.
+    - **Scatter Plot PCA 2D**: Proyecta la segmentación de pacientes (clusters) en las dos componentes principales, mostrando la varianza explicada.
+    - **Composición de Clusters por País (Barplot apilado)**: Evalúa el impacto o la distribución geográfica en los perfiles genómicos descubiertos.
+    - **Distribución de Anomaly Scores (Histograma)**: Muestra las anomalías detectadas por Isolation Forest, destacando con una línea el umbral y en rojo el percentil inusual.
+
+- **Imágenes (`15_viz_images.py`)**:
+    - **Balance de Clases (Pie chart)**: Muestra porcentualmente las categorías (Normal, Benign, Malignant) de cara a justificar técnicas de balanceo futuro.
+    - **Scatter de Dimensiones**: Representa el ancho frente al alto de cada imagen, útil para detectar anomalías de resolución sistemáticas y outliers de tamaño.
+
+**Almacenamiento e Interpretación:**
+Todas las figuras generadas se han exportado en formato PNG de alta resolución (150 dpi) y se han almacenado en el directorio estructurado `datalake/curated/reports/figures/`. Además, para facilitar la redacción del informe final, cada imagen está acompañada de un archivo de texto (`.txt`) homónimo que contiene la justificación y la interpretación clínica/técnica de esa visualización concreta.
+
+**Dificultades encontradas y soluciones técnicas:**
+
+- **Dependencias de visualización ausentes**: Al intentar ejecutar los scripts de visualización, se detectó la ausencia de las librerías `matplotlib` y `seaborn` en el entorno. Se procedió a su instalación mediante el gestor de paquetes. Además, se implementó una paleta de colores global y consistente para todas las visualizaciones a nivel de código para mantener la estética cruzada entre scripts.
+- **Advertencias (Warnings) de versiones recientes de Seaborn**: Durante la generación de los boxplots en los scripts clínico y de imágenes, la librería arrojaba advertencias de futura deprecación por asignar el parámetro `palette` sin `hue`. Se arregló modificando el código para auto-asignar `hue` a la misma variable del eje X y configurando `legend=False`, logrando la misma estética y evitando la ruptura del código en versiones venideras.
+- **Gráfico condicional de intensidad de píxeles**: El requerimiento contemplaba un boxplot con el brillo medio siempre y cuando hubiera sido calculado en capas previas. Dado que la capa Cleanse se focalizó en los metadatos y resoluciones espaciales sin llegar a procesar intensidades a nivel de píxel, se codificó una comprobación condicional dinámica en el script. Si la métrica no existe, se omite de forma limpia el gráfico; si en un futuro la métrica es añadida al pipeline, se generará sin necesidad de alterar este script.
+
 ---
 *(Este archivo se continuará actualizando con las siguientes fases del proyecto.)*
-
