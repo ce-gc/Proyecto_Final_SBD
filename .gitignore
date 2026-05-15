@@ -1,7 +1,14 @@
 # Datalake data (to avoid uploading large/private datasets)
-datalake/raw/
-datalake/cleanse/
-datalake/curated/
+# Ignorar datos
+datalake/raw/clinical/*
+datalake/raw/genomics/*
+datalake/raw/images/*
+datalake/cleanse/clinical/*
+datalake/cleanse/genomics/*
+datalake/cleanse/images_meta/*
+datalake/curated/clinical/*
+datalake/curated/genomics/*
+datalake/curated/images/*
 
 # Python
 __pycache__/

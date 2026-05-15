@@ -1,0 +1,22 @@
+[
+    {
+        "feature": "concave points_worst",
+        "importance": 0.17940550302757574
+    },
+    {
+        "feature": "radius_worst",
+        "importance": 0.16592472543571332
+    },
+    {
+        "feature": "area_worst",
+        "importance": 0.13997890489433293
+    },
+    {
+        "feature": "perimeter_worst",
+        "importance": 0.11012310195843095
+    },
+    {
+        "feature": "concave points_mean",
+        "importance": 0.09439612127157583
+    }
+]
