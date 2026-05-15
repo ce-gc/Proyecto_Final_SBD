@@ -1,0 +1,1 @@
+La matriz de confusión revela los valores absolutos y porcentajes de clasificación. Se minimizan los falsos negativos (casos malignos clasificados como benignos, 1), lo que es el error más costoso en diagnóstico oncológico.

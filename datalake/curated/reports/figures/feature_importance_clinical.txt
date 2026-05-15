@@ -1,0 +1,1 @@
+El gráfico destaca las 15 variables más importantes según el Random Forest. Las variables relacionadas con el tamaño y la concavidad dominan la decisión del modelo, indicando qué aspectos morfométricos importan clínicamente.

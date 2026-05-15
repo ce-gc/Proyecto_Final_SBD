@@ -1,0 +1,1 @@
+Se observa alta correlación positiva (zonas rojas intensas) entre variables de tamaño como radio, área y perímetro, lo que indica redundancia. Estas variables podrían descartarse o combinarse en futuros modelos para evitar multicolinealidad.

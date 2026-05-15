@@ -1,0 +1,1 @@
+La curva ROC muestra el rendimiento del modelo, logrando un AUC de 0.998. La curva se acerca a la esquina superior izquierda, muy por encima del clasificador aleatorio, confirmando la alta fiabilidad en la clasificación.

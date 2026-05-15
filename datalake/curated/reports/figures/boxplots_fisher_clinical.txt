@@ -1,0 +1,1 @@
+Los boxplots muestran las 6 variables con mayor ratio de Fisher. Visualmente es evidente la gran separabilidad de clases: los valores de los casos malignos (M) son sistemáticamente superiores a los benignos (B), lo que justifica su excelente poder predictivo.
