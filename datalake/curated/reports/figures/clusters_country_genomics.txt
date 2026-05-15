@@ -1,0 +1,1 @@
+El gráfico de barras apiladas revela la distribución de países dentro de cada cluster. Permite interpretar si los subtipos genómicos descubiertos tienen un componente geográfico, dando pistas sobre posibles factores poblacionales o ambientales.

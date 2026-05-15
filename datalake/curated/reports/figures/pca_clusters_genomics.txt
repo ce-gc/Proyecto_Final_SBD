@@ -1,0 +1,1 @@
+El gráfico PCA reduce las dimensiones genómicas a 2 ejes, explicando un porcentaje de varianza representativo. Los puntos coloreados por cluster muestran la separación de distintos subtipos biológicos en el espacio latente, la visualización más potente del análisis no supervisado.

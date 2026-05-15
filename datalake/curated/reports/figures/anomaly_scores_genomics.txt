@@ -1,0 +1,1 @@
+El histograma de scores de anomalía muestra una distribución continua con una cola izquierda que agrupa registros inusuales. La línea vertical marca el umbral del Isolation Forest, separando claramente (en rojo) los pacientes con perfiles de expresión génica extremadamente atípicos.

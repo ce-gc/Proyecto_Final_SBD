@@ -1,0 +1,1 @@
+El gráfico de codo muestra la inercia en función del número de clusters K. Se observa un punto de inflexión alrededor de K=3, justificando la elección de este número como óptimo, en lugar de una decisión arbitraria.
