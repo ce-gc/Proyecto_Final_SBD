@@ -18,57 +18,95 @@ Los datos fluyen a traves de tres capas principales ubicadas en la carpeta `data
 
 ```text
 Proyecto_Final/
-├── datalake/           # Almacenamiento local organizado por capas
-│   ├── raw/
-│   ├── cleanse/
-│   └── curated/
-├── jobs/               # Scripts secuenciales del pipeline de datos
-├── reports/            # Salidas analiticas
-│   ├── metrics/        # Metricas en formato JSON
-│   └── figures/        # Visualizaciones estaticas generadas
-├── memoria.md          # Memoria tecnica detallada paso a paso
-├── docker-compose.yml  # Configuracion de la infraestructura Docker
-└── requirements.txt    # Dependencias de Python
+├── datalake/                # Data Lake local organizado por capas
+│   ├── raw/                 # Datos originales (csv/parquet/imágenes)
+│   ├── cleanse/             # Datos limpios por dominio (clinical/, genomics/, images/)
+│   │   ├── clinical/
+│   │   ├── genomics/
+│   │   └── images/
+│   ├── curated/             # Datos preparados para ML y visualización
+│   │   ├── clinical/
+│   │   ├── clinical_classification/
+│   │   ├── genomics/
+│   │   ├── genomics_anomalies/
+│   │   ├── genomics_clustering/
+│   │   └── images/
+│   └── powerbi/             # Artefactos para Power BI (ej. clinical_data_full.csv)
+├── jobs/                    # Scripts del pipeline (números indican el orden recomendado)
+├── reports/                 # Salidas analíticas y visuales
+│   ├── metrics/             # Métricas en formato JSON
+│   └── figures/             # Visualizaciones estáticas generadas
+├── logs/                    # Resúmenes y logs de ejecución (json)
+├── docs/                    # Documentación y metodología
+├── tests/                   # Tests unitarios (p.ej. test_datalake.py)
+├── memoria.md               # Memoria técnica detallada paso a paso
+├── docker-compose.yml       # Configuración de la infraestructura Docker
+└── requirements.txt         # Dependencias de Python
 ```
 
-## Ejecucion del Pipeline
+## Ejecución del Pipeline
 
-El proyecto esta disenado para ejecutarse de forma secuencial a traves de los scripts ubicados en la carpeta `jobs/`. Se recomienda ejecutar el proyecto dentro de su contenedor Docker para garantizar la coherencia del entorno.
+Los scripts en `jobs/` están numerados para indicar el orden recomendado. Se puede ejecutar cada paso individualmente o dentro del contenedor Docker (recomendado para reproducibilidad).
 
-### 1. Ingesta (Fase 2)
-* `01_ingesta_clinical.py`
-* `02_ingesta_genomics.py`
-* `03_ingesta_images.py`
+1) Levantar entorno Docker (opcional, recomendable):
 
-### 2. Procesamiento y Limpieza (Fase 3)
-* `04_limpieza_clinical.py`
-* `05_limpieza_genomics.py`
-* `06_limpieza_images.py`
+```bash
+docker-compose up -d
+```
 
-### 3. Capa Curated y Machine Learning (Fase 3)
-* `07_curated_clasificacion.py`
-* `08_curated_clustering.py`
-* `09_curated_anomalias.py`
+2) Ejecutar los pasos en orden (ejemplo mínimo, desde la raíz del proyecto):
 
-### 4. Metricas Analiticas (Fase 4)
-* `10_metrics_clinical.py`
-* `11_metrics_genomics.py`
-* `12_metrics_images.py`
+```bash
+python jobs/01_ingesta_clinical.py
+python jobs/02_ingesta_genomics.py
+python jobs/03_ingesta_images.py
 
-### 5. Reportes Graficos (Fase 5)
-* `13_viz_clinical.py`
-* `14_viz_genomics.py`
-* `15_viz_images.py`
+python jobs/04_limpieza_clinical.py
+python jobs/05_limpieza_genomics.py
+python jobs/06_limpieza_images.py
 
-## Dashboard Interactivo (Fase 6)
+python jobs/07_curated_clasificacion.py
+python jobs/08_curated_clustering.py
+python jobs/09_curated_anomalias.py
 
-El proyecto incluye un cuadro de mando interactivo construido con Plotly Dash que consolida los hallazgos visuales.
+python jobs/10_metrics_clinical.py
+python jobs/11_metrics_genomics.py
+python jobs/12_metrics_images.py
 
-Para iniciarlo:
+python jobs/13_viz_clinical.py
+python jobs/14_viz_genomics.py
+python jobs/15_viz_images.py
+
+# Dashboard / export a Power BI
+python jobs/16_dashboard.py
+python jobs/17_export_powerbi.py
+```
+
+Notas importantes:
+- Los scripts escriben salidas en `datalake/curated/`, `reports/metrics/` y `reports/figures/`.
+- Si prefieres ejecutar local sin Docker, instala dependencias con:
+
+```bash
+pip install -r requirements.txt
+```
+
+- Revisa `logs/` para los resúmenes de ejecución (archivos json con timestamps).
+- Hay tests básicos en `tests/test_datalake.py`; ejecútalos con `pytest tests/`.
+
+## Dashboard Interactivo y Export a Power BI (Fase 6)
+
+El proyecto incluye un dashboard interactivo (Plotly Dash) y una tarea para exportar artefactos compatibles con Power BI.
+
+Iniciar dashboard:
 ```bash
 python jobs/16_dashboard.py
 ```
-El servidor estara disponible en la direccion `http://localhost:8050/`.
+El servidor estará disponible en `http://localhost:8050/`.
+
+Exportar datos para Power BI (genera `datalake/powerbi/` con archivos CSV usados por los informes):
+```bash
+python jobs/17_export_powerbi.py
+```
 
 ## Requisitos y Configuracion
 

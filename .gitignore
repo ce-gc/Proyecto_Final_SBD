@@ -9,6 +9,7 @@ datalake/cleanse/images_meta/*
 datalake/curated/clinical/*
 datalake/curated/genomics/*
 datalake/curated/images/*
+datalek/powerbi/*
 
 # Python
 __pycache__/

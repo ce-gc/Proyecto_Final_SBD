@@ -12,8 +12,12 @@ from dash import dcc, html, Input, Output
 import dash_bootstrap_components as dbc
 import plotly.express as px
 import plotly.graph_objects as go
+import webbrowser
+import sys
 from sklearn.decomposition import PCA
 from sklearn.cluster import KMeans
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.preprocessing import StandardScaler
 
 # Configuración de rutas
 DATALAKE_ROOT = "/datalake" if os.path.exists("/datalake") else os.path.join(
@@ -27,9 +31,58 @@ CLEANSE_IMAGES_PATH = os.path.join(DATALAKE_ROOT, "cleanse", "images")
 print("Cargando datos clínicos...")
 try:
     df_clinical = pd.read_parquet(CLEANSE_CLINICAL_PATH)
+    clin_num_cols = []
+    df_importance = pd.DataFrame()
+    top_5_features = []
+    radar_data = []
+    
+    if not df_clinical.empty:
+        # Extraer variables numéricas excluyendo 'id'
+        clin_num_cols = df_clinical.select_dtypes(include=[np.number]).columns.tolist()
+        if 'id' in clin_num_cols: clin_num_cols.remove('id')
+        
+        # PCA Clínico
+        X_clin = df_clinical[clin_num_cols].fillna(0)
+        pca_clin = PCA(n_components=3, random_state=42)
+        X_pca_clin = pca_clin.fit_transform(X_clin)
+        df_clinical['Clin_PC1'] = X_pca_clin[:, 0]
+        df_clinical['Clin_PC2'] = X_pca_clin[:, 1]
+        df_clinical['Clin_PC3'] = X_pca_clin[:, 2]
+        
+        # Feature Importance (Random Forest)
+        top_5_features = clin_num_cols[:5] # Default
+        if 'diagnosis' in df_clinical.columns:
+            rf = RandomForestClassifier(n_estimators=50, random_state=42)
+            rf.fit(X_clin, df_clinical['diagnosis'])
+            df_importance = pd.DataFrame({
+                'Feature': clin_num_cols,
+                'Importance': rf.feature_importances_
+            }).sort_values(by='Importance', ascending=False)
+            top_5_features = df_importance['Feature'].head(5).tolist()
+            
+            # Preparar Radar Chart Data (Escalar top 5 y calcular medias por diagnosis)
+            scaler = StandardScaler()
+            df_clinical_scaled = df_clinical.copy()
+            df_clinical_scaled[top_5_features] = scaler.fit_transform(df_clinical[top_5_features])
+            
+            radar_means = df_clinical_scaled.groupby('diagnosis')[top_5_features].mean().reset_index()
+            for diag in radar_means['diagnosis'].unique():
+                r_values = radar_means[radar_means['diagnosis'] == diag][top_5_features].values[0].tolist()
+                radar_data.append(
+                    go.Scatterpolar(
+                        r=r_values + [r_values[0]], # Close loop
+                        theta=top_5_features + [top_5_features[0]],
+                        fill='toself',
+                        name=f'Diagnosis: {diag}'
+                    )
+                )
 except Exception as e:
     print(f"Error cargando clínico: {e}")
     df_clinical = pd.DataFrame()
+    clin_num_cols = []
+    df_importance = pd.DataFrame()
+    top_5_features = []
+    radar_data = []
 
 print("Cargando datos genómicos...")
 try:
@@ -51,6 +104,10 @@ try:
         kmeans = KMeans(n_clusters=3, random_state=42, n_init=10)
         df_genomics['cluster'] = kmeans.fit_predict(X_pca_3[:, :2])
         df_genomics['cluster'] = df_genomics['cluster'].astype(str)
+        # Map clusters a nombres legibles (Cluster A, Cluster B, ...)
+        cluster_vals = sorted(df_genomics['cluster'].unique())
+        cluster_name_map = {v: f"Cluster {chr(65 + i)}" for i, v in enumerate(cluster_vals)}
+        df_genomics['cluster_name'] = df_genomics['cluster'].map(cluster_name_map)
 except Exception as e:
     print(f"Error cargando genómico: {e}")
     df_genomics = pd.DataFrame()
@@ -87,26 +144,52 @@ def render_tab_content(active_tab):
         if df_clinical.empty:
             return html.P("No hay datos clínicos disponibles.")
             
-        num_cols = df_clinical.select_dtypes(include=[np.number]).columns.tolist()
-        if 'id' in num_cols: num_cols.remove('id')
+        corr_matrix = df_clinical[clin_num_cols].corr()
+        fig_corr = px.imshow(corr_matrix, text_auto=False, aspect="auto", title="Matriz de Correlación", color_continuous_scale="RdBu_r", zmin=-1, zmax=1)
         
-        corr_matrix = df_clinical[num_cols].corr()
-        fig_corr = px.imshow(corr_matrix, text_auto=False, aspect="auto", title="Matriz de Correlación de Variables Clínicas", color_continuous_scale="RdBu_r", zmin=-1, zmax=1)
+        # Feature Importance Figure
+        fig_importance = px.bar(df_importance.head(10), x='Importance', y='Feature', orientation='h', title="Top 10 Variables (Random Forest)") if not df_importance.empty else go.Figure()
+        fig_importance.update_layout(yaxis={'categoryorder':'total ascending'})
+        
+        # Radar Figure
+        fig_radar = go.Figure(data=radar_data)
+        fig_radar.update_layout(polar=dict(radialaxis=dict(visible=True)), title="Radar Chart (Promedios Normalizados Top 5)")
+        
+        # PCA 3D Clínico
+        fig_pca_clin = px.scatter_3d(df_clinical, x='Clin_PC1', y='Clin_PC2', z='Clin_PC3', color='diagnosis' if 'diagnosis' in df_clinical.columns else None, title="PCA 3D de Variables Clínicas", color_discrete_map={"M": "#d62728", "B": "#1f77b4"})
+        
+        # Scatter Matrix (Pairplot)
+        fig_pairplot = px.scatter_matrix(df_clinical, dimensions=top_5_features, color='diagnosis' if 'diagnosis' in df_clinical.columns else None, title="Scatter Matrix (Top 5 Variables)", color_discrete_map={"M": "#d62728", "B": "#1f77b4"})
+        fig_pairplot.update_traces(diagonal_visible=False)
+        
+        # Valores por defecto para dropdowns
+        x_val = top_5_features[0] if top_5_features else (clin_num_cols[0] if clin_num_cols else None)
+        y_val = top_5_features[1] if len(top_5_features) > 1 else (clin_num_cols[1] if len(clin_num_cols) > 1 else x_val)
         
         return html.Div([
             dbc.Row([
                 dbc.Col([
-                    html.Label("Variable X (Boxplot & Scatter):"),
-                    dcc.Dropdown(id="clin-x", options=[{"label": c, "value": c} for c in num_cols], value="radius_mean", clearable=False),
+                    html.Label("Variable X (Violin & Scatter):"),
+                    dcc.Dropdown(id="clin-x", options=[{"label": c, "value": c} for c in clin_num_cols], value=x_val, clearable=False),
                 ], width=4),
                 dbc.Col([
                     html.Label("Variable Y (solo Scatter):"),
-                    dcc.Dropdown(id="clin-y", options=[{"label": c, "value": c} for c in num_cols], value="texture_mean", clearable=False),
+                    dcc.Dropdown(id="clin-y", options=[{"label": c, "value": c} for c in clin_num_cols], value=y_val, clearable=False),
                 ], width=4)
             ], className="mb-4"),
             dbc.Row([
                 dbc.Col(dcc.Graph(id="clin-scatter"), width=6),
-                dbc.Col(dcc.Graph(id="clin-boxplot"), width=6),
+                dbc.Col(dcc.Graph(id="clin-violin"), width=6),
+            ]),
+            html.Hr(),
+            dbc.Row([
+                dbc.Col(dcc.Graph(figure=fig_importance), width=6),
+                dbc.Col(dcc.Graph(figure=fig_radar), width=6),
+            ]),
+            html.Hr(),
+            dbc.Row([
+                dbc.Col(dcc.Graph(figure=fig_pca_clin), width=6),
+                dbc.Col(dcc.Graph(figure=fig_pairplot), width=6),
             ]),
             html.Hr(),
             html.H3("Matriz de Correlación", className="mt-4"),
@@ -120,7 +203,7 @@ def render_tab_content(active_tab):
         return html.Div([
             html.H3("Exploración de Clusters Genómicos (PCA 3D)"),
             dcc.Graph(
-                figure=px.scatter_3d(df_genomics, x='PC1', y='PC2', z='PC3', color='cluster', 
+                figure=px.scatter_3d(df_genomics, x='PC1', y='PC2', z='PC3', color='cluster_name' if 'cluster_name' in df_genomics.columns else 'cluster', 
                                      hover_data=['country'] if 'country' in df_genomics.columns else [],
                                      title="Clusters K-Means en Espacio PCA 3D",
                                      color_discrete_sequence=px.colors.qualitative.Set1)
@@ -143,7 +226,7 @@ def render_tab_content(active_tab):
             html.H3("Composición de Clusters por País (Barras)", className="mt-4"),
             dcc.Graph(
                 figure=(
-                    px.histogram(df_genomics, x='country' if 'country' in df_genomics.columns else 'cluster', color='cluster',
+                    px.histogram(df_genomics, x='country' if 'country' in df_genomics.columns else 'cluster_name', color='cluster_name' if 'cluster_name' in df_genomics.columns else 'cluster',
                                  title="Distribución de Clusters por País", barmode='group')
                     if not df_genomics.empty else go.Figure()
                 )
@@ -188,18 +271,33 @@ def update_clinical_scatter(x_col, y_col):
     return fig
 
 @app.callback(
-    Output("clin-boxplot", "figure"),
+    Output("clin-violin", "figure"),
     Input("clin-x", "value")
 )
-def update_clinical_boxplot(x_col):
+def update_clinical_violin(x_col):
     if not x_col or df_clinical.empty:
         return go.Figure()
     
-    fig = px.box(df_clinical, x="diagnosis" if "diagnosis" in df_clinical.columns else None, y=x_col, 
+    fig = px.violin(df_clinical, x="diagnosis" if "diagnosis" in df_clinical.columns else None, y=x_col, 
                  color="diagnosis" if "diagnosis" in df_clinical.columns else None,
+                 box=True, points="all",
                  title=f"Distribución de {x_col}",
                  color_discrete_map={"M": "#d62728", "B": "#1f77b4"})
     return fig
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=8050, debug=True)
+    host = "0.0.0.0"
+    port = 8050
+    local_url = f"http://localhost:{port}/"
+    host_url = f"http://{host}:{port}/"
+    print("\nDashboard iniciado.")
+    print(f"Abre en el navegador: {local_url}")
+    print(f"Si ejecutas desde otra máquina en la red, usa: {host_url}")
+    print("PowerShell: Start-Process 'http://localhost:8050'")
+    # Intentar abrir en el navegador por defecto (solo en ejecuciones locales)
+    try:
+        if sys.platform.startswith('win') or sys.platform.startswith('linux') or sys.platform.startswith('darwin'):
+            webbrowser.open(local_url)
+    except Exception:
+        pass
+    app.run(host=host, port=port, debug=True)
