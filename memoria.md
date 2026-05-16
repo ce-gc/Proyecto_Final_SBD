@@ -258,4 +258,29 @@ Para complementar las visualizaciones estáticas de la Fase 5, se ha desarrollad
 - **Compatibilidad de Rutas:** Al igual que el resto del pipeline, el script detecta inteligentemente la ruta del `DATALAKE_ROOT` (vía `os.path`), garantizando su funcionamiento independientemente de dónde se invoque el proceso.
 
 ---
-*(Este archivo se continuará actualizando con las siguientes fases del proyecto.)*
+
+### Comparativa Final con la Planificación Inicial
+
+Al contrastar la ejecución final del proyecto con el documento de planificación original (`Planificacion_DataLake_CancerMama.docx`), se concluye que el desarrollo se ha adherido de forma excepcionalmente rigurosa al plan establecido, introduciendo además optimizaciones de valor durante el proceso.
+
+**Puntos donde se ha cumplido exactamente lo planificado:**
+- **Arquitectura de Datos**: Se ha mantenido íntegramente el diseño Medallón (Capas Raw, Cleanse, Curated), usando persistencia en formato **Parquet** con particionados eficientes (por diagnóstico clínico, país de origen y categoría de imagen).
+- **Fuentes de Datos Heterogéneas**: Las tres fuentes estipuladas (CSV Clínico, Parquet Genómico de 100,000 registros y dataset de Imágenes radiológicas) se han procesado de manera unificada mediante PySpark.
+- **Aplicación de Algoritmos Analíticos (Modeling)**: Se plantearon modelos de Clasificación, Clustering con K-Means y Detección de Anomalías mediante Isolation Forest. Todos ellos han sido materializados y validados con rigor estadístico.
+- **Entorno de Ejecución**: La orquestación mediante **Docker Compose** y el procesamiento con **PySpark** se mantuvo como la espina dorsal tecnológica, logrando las metas de escalabilidad planeadas.
+
+**Cambios realizados respecto a la planificación original (Mejoras justificadas):**
+- **Dashboard de Despliegue Analítico**:
+  - *Plan inicial*: Se sugirió usar "Power BI o matplotlib" para presentar los resultados.
+  - *Ejecución real*: Se desarrolló un **Dashboard web interactivo en Plotly Dash** (`16_dashboard.py`).
+  - *Motivo del cambio*: Dash permite una integración nativa en Python, evitando depender de software privativo externo. Además, soporta visualizaciones de alta complejidad que Power BI no maneja de forma nativa con tanta fluidez, como el Scatter Plot PCA en 3D que permite al usuario navegar espacialmente por los clusters genómicos.
+- **Extracción Enriquecida de Metadatos (Imágenes)**:
+  - *Plan inicial*: Extraer información básica (dimensiones y clase).
+  - *Ejecución real*: Se calcularon métricas avanzadas (canales, modos de color y Hash MD5 criptográfico).
+  - *Motivo del cambio*: Identificar de forma inequívoca imágenes duplicadas y comprender la distribución cromática, un factor vital para pre-entrenar futuras Redes Neuronales Convolucionales (CNN).
+- **Optimización de Complejidad Computacional (Métrica Silhouette)**:
+  - *Plan inicial*: Calcular el Silhouette Score del dataset genómico completo.
+  - *Ejecución real*: Implementación de muestreo aleatorio (*sampling*) estratificado.
+  - *Motivo del cambio*: La naturaleza $O(N^2)$ del algoritmo habría bloqueado el clúster local al procesar 100,000 registros. El sampling mantuvo el rigor estadístico mientras reducía el tiempo de ejecución a segundos.
+
+En conclusión, el proyecto no solo ha logrado materializar el 100% de la arquitectura fundacional planificada, sino que el carácter iterativo de la metodología CRISP-DM permitió introducir mejoras tácticas de gran valor técnico.
