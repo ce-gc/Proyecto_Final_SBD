@@ -244,5 +244,18 @@ Todas las figuras generadas se han exportado en formato PNG de alta resolución 
 - **Advertencias (Warnings) de versiones recientes de Seaborn**: Durante la generación de los boxplots en los scripts clínico y de imágenes, la librería arrojaba advertencias de futura deprecación por asignar el parámetro `palette` sin `hue`. Se arregló modificando el código para auto-asignar `hue` a la misma variable del eje X y configurando `legend=False`, logrando la misma estética y evitando la ruptura del código en versiones venideras.
 - **Gráfico condicional de intensidad de píxeles**: El requerimiento contemplaba un boxplot con el brillo medio siempre y cuando hubiera sido calculado en capas previas. Dado que la capa Cleanse se focalizó en los metadatos y resoluciones espaciales sin llegar a procesar intensidades a nivel de píxel, se codificó una comprobación condicional dinámica en el script. Si la métrica no existe, se omite de forma limpia el gráfico; si en un futuro la métrica es añadida al pipeline, se generará sin necesidad de alterar este script.
 
+### Fase 6 — Dashboard Interactivo
+Para complementar las visualizaciones estáticas de la Fase 5, se ha desarrollado un cuadro de mando web interactivo (`16_dashboard.py`) utilizando **Plotly Dash** y **Dash Bootstrap Components**. El objetivo es permitir a los usuarios explorar dinámicamente los datos limpios en una única interfaz unificada y fluida.
+
+**Características implementadas:**
+- **Pestaña Clínica:** Permite seleccionar interactivamente los ejes X e Y para un gráfico de dispersión, que se acompaña de un boxplot dinámico para visualizar la distribución de la variable seleccionada frente al diagnóstico. También integra una vista interactiva de la matriz de correlación (Heatmap) para un análisis rápido de multicolinealidad.
+- **Pestaña Genómica:** Evoluciona la vista PCA a un **Scatter Plot en 3D** (PC1, PC2, PC3), lo que permite rotar e inspeccionar espacialmente los 3 clústeres genómicos descubiertos. Se ha incorporado un **Mapa Mundial Interactivo (Choropleth)** que proyecta los recuentos de pacientes por país de origen (limpiando dinámicamente la sintaxis, ej. `SOUTH_AFRICA` a `SOUTH AFRICA`), además de restituir el gráfico de barras apilado para analizar la composición de clústeres.
+- **Pestaña Imágenes:** Muestra gráficos interactivos equivalentes a la fase estática, incluyendo un pie chart para el balance de clases y un scatter de ancho por alto para explorar la resolución radiológica de cada categoría.
+
+**Soluciones Técnicas Aplicadas:**
+- **Navegación dinámica (SPA):** El uso de `dbc.Tabs` permite alternar entre las tres vistas. Se configuró `suppress_callback_exceptions=True` en la inicialización de Dash para resolver conflictos de IDs al montar callbacks en componentes que aún no están renderizados en el DOM.
+- **Integración de dependencias:** Se ampliaron las librerías del proyecto en `requirements.txt` (`dash`, `plotly`, `dash-bootstrap-components`).
+- **Compatibilidad de Rutas:** Al igual que el resto del pipeline, el script detecta inteligentemente la ruta del `DATALAKE_ROOT` (vía `os.path`), garantizando su funcionamiento independientemente de dónde se invoque el proceso.
+
 ---
 *(Este archivo se continuará actualizando con las siguientes fases del proyecto.)*
