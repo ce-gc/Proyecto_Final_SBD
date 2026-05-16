@@ -5,3 +5,7 @@ Pillow
 fsspec
 huggingface_hub
 scikit-learn
+
+dash
+plotly
+dash-bootstrap-components
