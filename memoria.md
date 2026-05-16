@@ -21,6 +21,9 @@ Proyecto_Final/
 │   └── curated/
 ├── docs/
 ├── jobs/
+├── reports/
+│   ├── metrics/
+│   └── figures/
 ├── tests/
 ```
 
@@ -233,7 +236,7 @@ Se ha desarrollado un conjunto de scripts en Python (`13_viz_clinical.py`, `14_v
     - **Scatter de Dimensiones**: Representa el ancho frente al alto de cada imagen, útil para detectar anomalías de resolución sistemáticas y outliers de tamaño.
 
 **Almacenamiento e Interpretación:**
-Todas las figuras generadas se han exportado en formato PNG de alta resolución (150 dpi) y se han almacenado en el directorio estructurado `datalake/curated/reports/figures/`. Además, para facilitar la redacción del informe final, cada imagen está acompañada de un archivo de texto (`.txt`) homónimo que contiene la justificación y la interpretación clínica/técnica de esa visualización concreta.
+Todas las figuras generadas se han exportado en formato PNG de alta resolución (150 dpi) y se han almacenado en el directorio estructurado `reports/figures/`. Además, para facilitar la redacción del informe final, cada imagen está acompañada de un archivo de texto (`.txt`) homónimo que contiene la justificación y la interpretación clínica/técnica de esa visualización concreta.
 
 **Dificultades encontradas y soluciones técnicas:**
 

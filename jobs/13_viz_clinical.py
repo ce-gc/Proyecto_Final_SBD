@@ -24,7 +24,8 @@ DATALAKE_ROOT = "/datalake" if os.path.exists("/datalake") else os.path.join(
     os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "datalake"
 )
 CLEANSE_CLINICAL_PATH = os.path.join(DATALAKE_ROOT, "cleanse", "clinical")
-FIGURES_DIR = os.path.join(DATALAKE_ROOT, "curated", "reports", "figures")
+PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+FIGURES_DIR = os.path.join(PROJECT_ROOT, "reports", "figures")
 os.makedirs(FIGURES_DIR, exist_ok=True)
 
 NUMERIC_COLS = [

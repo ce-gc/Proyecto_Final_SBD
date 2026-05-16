@@ -23,7 +23,8 @@ DATALAKE_ROOT = "/datalake" if os.path.exists("/datalake") else os.path.join(
     os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "datalake"
 )
 CLEANSE_GENOMICS_PATH = os.path.join(DATALAKE_ROOT, "cleanse", "genomics")
-FIGURES_DIR = os.path.join(DATALAKE_ROOT, "curated", "reports", "figures")
+PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+FIGURES_DIR = os.path.join(PROJECT_ROOT, "reports", "figures")
 os.makedirs(FIGURES_DIR, exist_ok=True)
 
 def save_plot_and_text(fig_name, text_content):
